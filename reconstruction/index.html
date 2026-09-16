@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Video Sequence Reconstruction — Frames 001 to 250</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./js/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- Full-Screen 3D WebGL Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- Pure HTML / HUD Overlay (z-index: 10) -->
+  <div class="hud-overlay">
+    <!-- Top Telemetry Bar -->
+    <header class="hud-top-bar">
+      <div class="hud-pill">
+        <span class="pulse-dot"></span>
+        <span>SEQUENCE RECONSTRUCTION</span>
+      </div>
+
+      <div class="hud-phase-readout">
+        PHASE:<span id="phase-label">CIRCULAR AVATAR</span>
+      </div>
+
+      <div class="hud-timecode">
+        TIMECODE: <span id="timecode-label">00:00:00:00</span>
+      </div>
+    </header>
+
+    <!-- Bottom Interactive Transport Bar -->
+    <footer class="hud-bottom-bar hud-interactive">
+      <!-- Scrubber Slider Track -->
+      <div class="scrubber-track-container">
+        <input
+          type="range"
+          id="timeline-scrubber"
+          class="timeline-scrubber"
+          min="1"
+          max="250"
+          value="1"
+          step="1"
+        />
+        <div class="phase-markers">
+          <span>001 AVATAR</span>
+          <span>025 3D RING</span>
+          <span>055 DOLLY</span>
+          <span>115 EYE LOCK</span>
+          <span>170 MACRO</span>
+          <span>250 PUPIL</span>
+        </div>
+      </div>
+
+      <!-- Controls & Status Row -->
+      <div class="controls-row">
+        <div class="playback-buttons">
+          <button id="btn-play-pause" class="ctrl-btn" title="Toggle Play / Pause (Space)">
+            ▶ PLAY
+          </button>
+          <button id="btn-prev" class="ctrl-btn" title="Step Previous (Left Arrow)">
+            ◀ -1F
+          </button>
+          <button id="btn-next" class="ctrl-btn" title="Step Next (Right Arrow)">
+            +1F ▶
+          </button>
+          <button id="btn-restart" class="ctrl-btn" title="Restart from Frame 1">
+            ↺ RESET
+          </button>
+        </div>
+
+        <div class="frame-info">
+          FRAME: <span id="frame-counter">001</span> / 250
+        </div>
+
+        <div class="speed-selector">
+          <button class="speed-btn" data-speed="0.5">0.5x</button>
+          <button class="speed-btn active" data-speed="1.0">1.0x</button>
+          <button class="speed-btn" data-speed="2.0">2.0x</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Entry JavaScript Module (Vanilla Three.js, NO React) -->
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+.saas {
+  padding: clamp(6rem, 14vw, 10rem) 0;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.saas__inner {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.saas__copy h2 {
+  margin-top: 1.25rem;
+  font-size: var(--fs-xl);
+  line-height: 1.05;
+}
+
+.saas__copy p {
+  margin-top: 1.25rem;
+  color: var(--ink-dim);
+  max-width: 42ch;
+}
+
+.saas__diagram {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .saas__inner { grid-template-columns: 1fr; }
+}

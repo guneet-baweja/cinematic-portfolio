@@ -1,0 +1,90 @@
+.before-after {
+  padding: clamp(6rem, 14vw, 10rem) 0;
+  background: var(--bg-elevated);
+}
+
+.before-after__heading {
+  margin-top: 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-xl);
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+
+.before-after__note {
+  margin-top: 1rem;
+  color: var(--ink-dim);
+  max-width: 50ch;
+}
+
+.before-after__frame {
+  position: relative;
+  margin-top: 2.5rem;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 4px;
+  touch-action: none;
+  cursor: ew-resize;
+}
+
+.before-after__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.before-after__layer--final {
+  clip-path: inset(0 0 0 var(--split));
+}
+
+.before-after__label {
+  position: absolute;
+  top: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  padding: 0.35rem 0.7rem;
+  background: rgba(10, 10, 11, 0.6);
+  backdrop-filter: blur(6px);
+}
+
+.before-after__label--raw { left: 1.25rem; }
+.before-after__label--final { right: 1.25rem; }
+
+.before-after__divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--split);
+  width: 1px;
+  background: #ffffff;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.before-after__knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 42px;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  background: rgba(11, 11, 11, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.before-after__knob::before,
+.before-after__knob::after {
+  content: "";
+  width: 1px;
+  height: 14px;
+  background: #ffffff;
+  opacity: 0.8;
+}

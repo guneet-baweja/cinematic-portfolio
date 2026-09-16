@@ -1,0 +1,80 @@
+.hero {
+  position: relative;
+}
+
+.hero__pin {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--fs-hero);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+}
+
+.hero__line {
+  overflow: hidden;
+}
+
+.hero__line span {
+  display: block;
+}
+
+.hero__line:last-child span {
+  font-weight: 600;
+}
+
+.hero__role {
+  margin-top: 1.75rem;
+  justify-content: center;
+}
+
+.hero__cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  z-index: 2;
+}
+
+.hero__cue-line {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(var(--accent), transparent);
+  animation: hero-cue 1.8s ease-in-out infinite;
+}
+
+@keyframes hero-cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  50.01% { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+@media (max-width: 780px) {
+  .hero__title { font-size: clamp(2.6rem, 13vw, 4rem); }
+}

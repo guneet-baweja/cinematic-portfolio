@@ -1,0 +1,21 @@
+.intro {
+  padding: clamp(6rem, 14vw, 11rem) 0;
+  background: var(--bg);
+}
+
+.intro__inner {
+  max-width: 1000px;
+}
+
+.intro__text {
+  margin-top: 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.6vw, 2.9rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.intro__text span {
+  transition: opacity 0.2s ease;
+}

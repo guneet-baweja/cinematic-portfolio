@@ -1,0 +1,16 @@
+.portfolio {
+  padding-top: clamp(6rem, 14vw, 10rem);
+  background: var(--bg);
+}
+
+.portfolio__heading {
+  margin-bottom: clamp(2rem, 6vw, 4rem);
+}
+
+.portfolio__heading h2 {
+  margin-top: 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-xl);
+  letter-spacing: -0.02em;
+}

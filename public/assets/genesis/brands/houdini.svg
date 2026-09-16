@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="115" fill="#18181c"/>
+  <rect x="12" y="12" width="488" height="488" rx="103" fill="none" stroke="#ff6a00" stroke-width="12" stroke-opacity="0.4"/>
+  <g transform="translate(256, 256) scale(1.3)">
+    <!-- Iconic SideFX Houdini Orange Origami H -->
+    <path d="M -90 -105 L -45 -105 L -45 -25 L 45 -25 L 45 -105 L 90 -105 L 90 105 L 45 105 L 45 25 L -45 25 L -45 105 L -90 105 Z" fill="#ff6a00"/>
+    <path d="M -45 -105 L 0 -60 L -45 -25 Z" fill="#ff8c33"/>
+    <path d="M 45 25 L 0 60 L 45 105 Z" fill="#e65500"/>
+    <polygon points="-45,-25 0,-60 45,-25 0,15" fill="#ffa35c"/>
+    <polygon points="-45,25 0,-15 45,25 0,60" fill="#cc4400"/>
+  </g>
+</svg>

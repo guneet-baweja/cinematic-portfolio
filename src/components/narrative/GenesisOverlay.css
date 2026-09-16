@@ -1,0 +1,178 @@
+.genesis-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem 3rem;
+  color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  transition: opacity 0.4s ease;
+}
+
+.genesis-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Top Bar Affordances */
+.genesis-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.genesis-pill {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #FF5F1F;
+  background: rgba(255, 95, 31, 0.08);
+  border: 1px solid rgba(255, 95, 31, 0.3);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+.genesis-skip-btn {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 0.45rem 1.1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.genesis-skip-btn:hover {
+  color: #FF5F1F;
+  border-color: rgba(255, 95, 31, 0.6);
+  background: rgba(255, 95, 31, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255, 95, 31, 0.2);
+}
+
+/* Narrative Center Copy */
+.genesis-narrative-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+  padding: 0 2rem;
+  transition: all 0.4s ease;
+}
+
+.genesis-narrative-container.beat-portrait {
+  justify-content: flex-end;
+  padding-bottom: 9vh;
+}
+
+.genesis-portrait-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.genesis-headline {
+  font-size: clamp(2.2rem, 5.5vw, 4.8rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 30%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 24px rgba(0, 0, 0, 0.8));
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.genesis-subtext {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(0.75rem, 1.2vw, 0.92rem);
+  letter-spacing: 0.2em;
+  color: #FF5F1F;
+  text-transform: uppercase;
+  max-width: 680px;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.9));
+  transition: opacity 0.3s ease;
+}
+
+/* Hemisphere Pills in Mind Beat */
+.genesis-hemisphere-left {
+  position: absolute;
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.genesis-hemisphere-right {
+  position: absolute;
+  right: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: #FF5F1F;
+  border: 1px solid rgba(255, 95, 31, 0.4);
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+/* Bottom Progress Ticker */
+.genesis-bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: #64748b;
+}
+
+@media (max-width: 768px) {
+  .genesis-overlay {
+    padding: 1.5rem 1.25rem;
+  }
+  .genesis-headline {
+    font-size: 2rem;
+  }
+  .genesis-hemisphere-left {
+    left: 5%;
+    font-size: 0.68rem;
+  }
+  .genesis-hemisphere-right {
+    right: 5%;
+    font-size: 0.68rem;
+  }
+}

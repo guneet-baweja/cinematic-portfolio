@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="115" fill="#00005b"/>
+  <rect x="12" y="12" width="488" height="488" rx="103" fill="none" stroke="#9999ff" stroke-width="24"/>
+  <text x="175" y="340" fill="#9999ff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="230" font-weight="900" letter-spacing="-10">A</text>
+  <text x="295" y="340" fill="#9999ff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="200" font-weight="700">e</text>
+</svg>

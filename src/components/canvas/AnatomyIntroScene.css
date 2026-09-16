@@ -1,0 +1,124 @@
+.anatomy-intro-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #030406;
+  z-index: 70;
+  pointer-events: none;
+}
+
+.anatomy-webgl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Strict HTML Overlay Layer (z-index: 10, pointer-events: none) */
+.anatomy-html-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(2rem, 5vw, 4.5rem);
+  box-sizing: border-box;
+  transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.anatomy-hud-pill {
+  position: absolute;
+  top: clamp(1.5rem, 3vw, 2.5rem);
+  left: clamp(1.5rem, 3vw, 3rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: #FF5F1F;
+  background: rgba(10, 12, 16, 0.75);
+  border: 1px solid rgba(255, 95, 31, 0.35);
+  border-radius: 9999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-transform: uppercase;
+}
+
+.anatomy-hud-pill .pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #FF5F1F;
+  box-shadow: 0 0 8px #FF5F1F;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.anatomy-content-block {
+  max-width: 900px;
+}
+
+.anatomy-headline {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(2.5rem, 7.5vw, 6.2rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+}
+
+.anatomy-subline {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: clamp(0.78rem, 1.4vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: #FF5F1F;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.anatomy-subline::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: #FF5F1F;
+}
+
+/* Coordinate / Depth Telemetry Indicator */
+.anatomy-telemetry {
+  position: absolute;
+  bottom: clamp(1.5rem, 3vw, 2.5rem);
+  right: clamp(1.5rem, 3vw, 3rem);
+  font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.12em;
+  text-align: right;
+}
+
+.anatomy-telemetry span {
+  color: #FF5F1F;
+}

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="resRed" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ff3b5c"/>
+      <stop offset="100%" stop-color="#b8002a"/>
+    </radialGradient>
+    <radialGradient id="resBlue" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#24b6ff"/>
+      <stop offset="100%" stop-color="#0062b8"/>
+    </radialGradient>
+    <radialGradient id="resYellow" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ffd530"/>
+      <stop offset="100%" stop-color="#e08500"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="115" fill="#141416"/>
+  <rect x="12" y="12" width="488" height="488" rx="103" fill="none" stroke="#2c2d30" stroke-width="12"/>
+  <g transform="translate(256, 256) scale(1.15)">
+    <!-- Top Petal (Red) -->
+    <path d="M 0 -130 C 50 -130 95 -95 90 -40 C 85 10 35 15 0 0 C -35 15 -85 10 -90 -40 C -95 -95 -50 -130 0 -130 Z" fill="url(#resRed)"/>
+    <!-- Bottom Right Petal (Blue) -->
+    <path d="M 112 65 C 137 108 115 160 65 180 C 15 200 -15 160 -10 130 C -5 100 25 80 56 65 Z" fill="url(#resBlue)" transform="rotate(120)"/>
+    <!-- Bottom Left Petal (Yellow) -->
+    <path d="M -112 65 C -137 108 -115 160 -65 180 C -15 200 15 160 10 130 C 5 100 -25 80 -56 65 Z" fill="url(#resYellow)" transform="rotate(240)"/>
+    <!-- Central Pinwheel Core -->
+    <circle cx="0" cy="0" r="28" fill="#141416"/>
+    <circle cx="0" cy="0" r="18" fill="#ffffff" opacity="0.9"/>
+  </g>
+</svg>

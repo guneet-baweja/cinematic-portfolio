@@ -1,0 +1,48 @@
+.motion-design {
+  position: relative;
+  padding: clamp(6rem, 16vw, 12rem) 0;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.motion-shape {
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  width: min(50vw, 620px);
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  background: radial-gradient(circle at 30% 30%, var(--accent-soft), transparent 70%);
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.motion-design__inner {
+  position: relative;
+}
+
+.motion-design__words {
+  margin-top: 1.5rem;
+}
+
+.motion-word {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  will-change: transform, opacity;
+}
+
+.motion-word:nth-child(2) {
+  color: var(--accent);
+  margin-left: clamp(0px, 8vw, 4rem);
+}
+
+.motion-design__note {
+  margin-top: 2rem;
+  max-width: 46ch;
+  color: var(--ink-dim);
+  font-size: var(--fs-md);
+}

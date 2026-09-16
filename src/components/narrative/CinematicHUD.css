@@ -1,0 +1,184 @@
+.cinematic-hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.85);
+  user-select: none;
+}
+
+/* Top Telemetry Bar */
+.cinematic-hud__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+
+.cinematic-hud__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(11, 13, 18, 0.65);
+  padding: 0.45rem 1rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.cinematic-hud__title {
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.cinematic-hud__sep {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.cinematic-hud__timecode {
+  color: #FF5F1F;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+}
+
+.cinematic-hud__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cinematic-hud__action-btn {
+  background: rgba(11, 13, 18, 0.65);
+  color: rgba(255, 255, 255, 0.85);
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.cinematic-hud__action-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.cinematic-hud__action-btn--accent {
+  background: rgba(255, 95, 31, 0.15);
+  border-color: rgba(255, 95, 31, 0.45);
+  color: #FF5F1F;
+}
+
+.cinematic-hud__action-btn--accent:hover {
+  background: #FF5F1F;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 95, 31, 0.5);
+}
+
+/* Bottom Instrument Deck */
+.cinematic-hud__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  background: rgba(11, 13, 18, 0.7);
+  padding: 0.65rem 1.4rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+}
+
+.cinematic-hud__stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cinematic-hud__stats strong {
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Center Scrubber Line */
+.cinematic-hud__scrubber-track {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+  max-width: 420px;
+}
+
+.cinematic-hud__scrubber-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cinematic-hud__scrubber-line {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.cinematic-hud__scrubber-marker {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #FF5F1F;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #FF5F1F;
+  transition: left 0.05s linear;
+}
+
+/* Right Tool Badge */
+.cinematic-hud__tool {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+}
+
+.cinematic-hud__tool-label {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.cinematic-hud__tool-val {
+  color: #FF5F1F;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+@media (max-width: 768px) {
+  .cinematic-hud {
+    padding: 1rem;
+  }
+  .cinematic-hud__scrubber-track {
+    display: none;
+  }
+  .cinematic-hud__stats span:nth-child(2) {
+    display: none;
+  }
+}

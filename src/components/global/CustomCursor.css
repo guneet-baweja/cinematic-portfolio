@@ -1,0 +1,84 @@
+/* ==========================================================================
+   CUSTOM CURSOR & MAGNETIC ZONES (PHASE 8)
+   ========================================================================== */
+
+/* Hide default cursor on desktop when custom cursor is active */
+body.has-custom-cursor,
+body.has-custom-cursor a,
+body.has-custom-cursor button,
+body.has-custom-cursor [role="button"] {
+  cursor: none !important;
+}
+
+/* Master Fixed Cursor Container */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+body.has-custom-cursor .custom-cursor {
+  display: flex;
+}
+
+/* Default Trailing Dot */
+.custom-cursor__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.2s ease,
+              border 0.2s ease;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Magnetic Locked State over [data-cursor-magnetic] */
+.custom-cursor.is-magnetic-locked .custom-cursor__dot {
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.9);
+}
+
+/* Contextual Mode Micro-Badge */
+.custom-cursor__badge {
+  position: absolute;
+  left: 18px;
+  font-family: "Space Mono", "JetBrains Mono", monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffffff;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-cursor.is-magnetic-locked .custom-cursor__badge {
+  opacity: 1;
+  transform: translateX(0);
+  color: #ffffff;
+}
+
+/* Mobile & Touch Fallback: Disable Custom Cursor */
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none !important;
+  }
+  body.has-custom-cursor {
+    cursor: auto !important;
+  }
+}

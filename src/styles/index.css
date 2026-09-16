@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap");
+
+:root {
+  color-scheme: dark;
+
+  /* ---- surface ---- */
+  --bg: #0b0b0b;
+  --bg-elevated: #111111;
+  --bg-raised: #181818;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.22);
+
+  /* ---- ink ---- */
+  --ink: #ffffff;
+  --ink-dim: #8f8f8f;
+  --ink-faint: #545454;
+
+  /* ---- strict global palette ----
+     One accent, everywhere: subtle high-tech neon-orange for HUD lines, dots, accents.
+     Mint is reserved exclusively for the CTA headline — see CTA.css. */
+  --accent: #FF5F1F;
+  --accent-soft: rgba(255, 95, 31, 0.14);
+  --mint: #5ffbb0;
+
+  /* ---- type ----
+     Sharp geometric sans everywhere; monospace reserved for tiny HUD/UI
+     labels only (eyebrows, metadata, frame counters). */
+  --font-display: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+
+  --fs-hero: clamp(3.2rem, 11vw, 9.5rem);
+  --fs-xl: clamp(2.4rem, 6.4vw, 5.5rem);
+  --fs-lg: clamp(1.6rem, 3.4vw, 2.6rem);
+  --fs-md: clamp(1.1rem, 1.6vw, 1.35rem);
+  --fs-body: clamp(0.95rem, 1vw, 1.05rem);
+  --fs-label: 0.78rem;
+
+  --container: min(1400px, 92vw);
+  --edge: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  background: var(--bg);
+  scroll-behavior: auto;
+}
+
+html, body {
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root { position: relative; }
+
+h1, h2, h3, h4, p, figure { margin: 0; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+img, video {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.container {
+  width: var(--container);
+  margin-inline: auto;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+section {
+  position: relative;
+}
+
+/* ---- global film-grain / noise overlay ----
+   Fixed above everything but the cursor, never intercepts input. */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Body scroll lock while the loader is active */
+body.is-loading {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Hide the native cursor once JS confirms fine-pointer support */
+body.has-custom-cursor,
+body.has-custom-cursor a,
+body.has-custom-cursor button {
+  cursor: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}

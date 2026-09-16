@@ -1,0 +1,59 @@
+.cta {
+  padding: clamp(7rem, 18vw, 13rem) 0;
+  background: var(--bg);
+  text-align: center;
+}
+
+.cta__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.cta__heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-hero);
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+}
+
+.cta__line {
+  overflow: hidden;
+}
+
+.cta__line span {
+  display: block;
+}
+
+.cta__line:last-child span {
+  color: var(--mint);
+}
+
+.cta__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 2.2rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.cta__button:hover {
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.cta__button span {
+  transition: transform 0.3s ease;
+}
+
+.cta__button:hover span {
+  transform: translateX(4px);
+}

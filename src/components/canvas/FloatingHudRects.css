@@ -1,0 +1,26 @@
+.hud-rects {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hud-rect {
+  position: absolute;
+  border: 1px solid rgba(255, 95, 31, 0.35);
+  will-change: transform;
+}
+
+.hud-rect::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  opacity: 0.6;
+}
