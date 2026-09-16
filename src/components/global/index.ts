@@ -6,3 +6,4 @@ export { Loader } from "./Loader";
 export { ErrorBoundary } from "./ErrorBoundary";
 export { EditorHUD } from "./EditorHUD";
 export { ScrollDiagnostics } from "./ScrollDiagnostics";
+export { CinemaLightbox } from "./CinemaLightbox";

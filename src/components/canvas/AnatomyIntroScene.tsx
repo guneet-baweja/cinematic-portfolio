@@ -232,39 +232,37 @@ function evalCameraPose(p: number): CameraPose {
         lookZ: THREE.MathUtils.lerp(-94.00, -96.50, ease),
         fov: 45,
       };
-    } else if (clamped < 0.9920) {
+    } else if (clamped < 0.9780) {
       // 4. Reference Stage 3 & 4: HERO MACRO CALIBER FRAMING & SILKY PARALLAX DRIFT
-      // Camera is inside the movement at optimal macro distance (~2.6 to 2.4 units from caliber at Z: -96.50).
-      // Frames the Hero 18K Gold Barrel Gear (35-45% width) with center wheel, third wheel,
-      // balance wheel with pulsing hairspring, escapement, and ruby chatons visible simultaneously.
-      const t = (clamped - 0.9420) / (0.9920 - 0.9420);
+      // Continuous forward glide through Swiss gears from Z: -93.85 to -101.50 (zero standstill or hang!)
+      const t = (clamped - 0.9420) / (0.9780 - 0.9420);
       const ease = t * t * (3.0 - 2.0 * t);
-      const z = THREE.MathUtils.lerp(-93.85, -94.15, ease);
-      const x = THREE.MathUtils.lerp(0.280, 0.160, ease);
-      const y = THREE.MathUtils.lerp(-15.82, -15.86, ease);
-      const lookX = THREE.MathUtils.lerp(0.050, -0.050, ease);
-      const lookY = THREE.MathUtils.lerp(-15.88, -15.92, ease);
+      const z = THREE.MathUtils.lerp(-93.85, -101.50, ease);
+      const x = THREE.MathUtils.lerp(0.280, 0.200, ease);
+      const y = THREE.MathUtils.lerp(-15.82, -15.88, ease);
+      const lookX = THREE.MathUtils.lerp(0.050, 0.120, ease);
+      const lookY = THREE.MathUtils.lerp(-15.88, -15.95, ease);
       return {
         x,
         y,
         z,
         lookX,
         lookY,
-        lookZ: -96.50,
+        lookZ: THREE.MathUtils.lerp(-96.50, -106.00, ease),
         fov: 45,
       };
     } else {
-      // 5. Reference Stage 5: Exit through Caliber into Climax Typography Sanctuary & Act 01 Breach
-      const t = (clamped - 0.9920) / (1.0000 - 0.9920);
+      // 5. Reference Stage 5: Exit through Tourbillon into Climax Typography Sanctuary & Act 01 Breach
+      const t = (clamped - 0.9780) / (1.0000 - 0.9780);
       const ease = t * t * (3.0 - 2.0 * t);
-      const z = THREE.MathUtils.lerp(-94.15, -108.00, ease);
+      const z = THREE.MathUtils.lerp(-101.50, -112.50, ease);
       return {
-        x: THREE.MathUtils.lerp(0.160, 0.265, ease),
-        y: THREE.MathUtils.lerp(-15.86, -16.00, ease),
+        x: THREE.MathUtils.lerp(0.200, 0.265, ease),
+        y: THREE.MathUtils.lerp(-15.88, -16.00, ease),
         z,
         lookX: 0.265,
         lookY: -16.00,
-        lookZ: THREE.MathUtils.lerp(-96.50, -114.00, ease),
+        lookZ: THREE.MathUtils.lerp(-106.00, -116.00, ease),
         fov: 45,
       };
     }
@@ -1873,60 +1871,47 @@ const AxonFascicleShader = {
     uniform float uCameraZ;
 
     void main() {
-      // Directional biological light for 3D tubular roundness
-      vec3 lightDir = normalize(vec3(0.5, 1.0, 0.8));
-      float ndl = max(0.25, dot(vNormal, lightDir));
+      // Directional light for tubular 3D definition
+      vec3 lightDir = normalize(vec3(0.4, 1.0, 0.7));
+      float ndl = max(0.20, dot(vNormal, lightDir));
 
-      // Specular highlight on moist, living nerve tissue
       vec3 viewDir = normalize(-vWorldPos);
       vec3 halfVec = normalize(lightDir + viewDir);
-      float spec = pow(max(0.0, dot(vNormal, halfVec)), 24.0) * 0.35;
+      float spec = pow(max(0.0, dot(vNormal, halfVec)), 32.0);
 
-      // Longitudinal axonal micro-fibers (fine neural striations)
-      float axonFiber = sin(vUv.x * 24.0 + sin(vUv.y * 14.0) * 1.5) * 0.5 + 0.5;
+      // High-frequency longitudinal cybernetic striations
+      float railGroove = sin(vUv.x * 24.0) * 0.5 + 0.5;
 
-      // Segmented Myelin Internodes & Nodes of Ranvier: periodic golden constriction rings
-      float ranvier = pow(sin(vUv.y * 56.0) * 0.5 + 0.5, 28.0);
+      // Primary surging high-speed action energy pulse wave rushing towards the heart
+      float streamPos = vUv.y * 28.0 - uTime * 18.0;
+      float packet = pow(sin(streamPos) * 0.5 + 0.5, 12.0);
 
-      // Primary action potential wave streaming brainstem -> heart
-      float streamPos = vUv.y * 22.0 - uTime * 14.0;
-      float packet = pow(sin(streamPos) * 0.5 + 0.5, 16.0);
+      // Secondary fast electrical sparks jumping along the rails
+      float fastSpark = pow(sin(vUv.y * 64.0 - uTime * 36.0 + vUv.x * 6.28) * 0.5 + 0.5, 16.0);
 
-      // High-speed saltatory conduction micro-spark jumping from node to node
-      float fastSpark = pow(sin(vUv.y * 70.0 - uTime * 32.0 + vUv.x * 6.28) * 0.5 + 0.5, 18.0);
+      // Searing luminous Fresnel neon edge
+      float fresnel = pow(1.0 - max(0.0, dot(vNormal, viewDir)), 2.4);
 
-      // Translucent biological rim lighting (Fresnel effect)
-      float fresnel = pow(1.0 - max(0.0, dot(vNormal, viewDir)), 2.6);
+      // Iconic Electric Cyber-Blue Palette
+      vec3 cDeepNavy = vec3(0.015, 0.08, 0.32);     // Deep midnight cobalt
+      vec3 cElectricCyan = vec3(0.0, 0.85, 1.0);    // Searing neon cyan rail
+      vec3 cWhiteLightning = vec3(0.85, 0.98, 1.0); // White-hot electrical surge
 
-      // Authentic anatomical palette:
-      // Myelinated nerve tissue (warm pearlescent ivory / soft nerve trunk amber)
-      vec3 cTissue = vec3(0.72, 0.62, 0.52);
-      vec3 cDeep = vec3(0.12, 0.07, 0.08);
-      vec3 cBase = mix(cDeep, cTissue, ndl);
+      vec3 color = mix(cDeepNavy, vec3(0.03, 0.22, 0.65), ndl);
+      color += cElectricCyan * (packet * 1.8 + fresnel * 0.95);
+      color += cWhiteLightning * fastSpark * 2.2;
+      color += vec3(0.7, 0.9, 1.0) * spec * 0.6;
+      color += cElectricCyan * railGroove * 0.25;
 
-      // Bio-electric signaling
-      vec3 cRanvier = vec3(1.0, 0.74, 0.20);      // Nodes of Ranvier ion glow (amber gold)
-      vec3 cPulse = vec3(0.0, 0.88, 1.0);         // Action potential wave (electric cyan)
-      vec3 cCore = vec3(1.0, 0.98, 0.92);         // Searing core voltage spark (white gold)
-
-      vec3 color = cBase;
-      color += vec3(0.18, 0.12, 0.08) * axonFiber * 0.35;
-      color += vec3(spec);
-      color += cRanvier * ranvier * 1.15;
-      color += cPulse * packet * 1.65;
-      color += cCore * fastSpark * 1.9;
-      color += cPulse * fresnel * 0.45;
-
-      // Smooth distance-based corridor fade: visible from approach (camZ < -7.5) through heart entry (Z > -32.0)
-      float fadeIn = smoothstep(-6.8, -11.0, -uCameraZ);
-      float fadeOut = smoothstep(-32.0, -28.5, vWorldPos.z);
+      // Precise corridor visibility from brainstem descent (uCameraZ < -5.0) down to heart entry (vWorldPos.z > -33.5)
+      float fadeIn = smoothstep(-4.5, -8.0, uCameraZ);
+      float fadeOut = smoothstep(-34.0, -30.5, vWorldPos.z);
       float conduitFade = clamp(fadeIn * fadeOut, 0.0, 1.0);
 
-      // Smooth longitudinal start & end taper (eliminates open hollow cylinder caps)
-      float tubeFade = smoothstep(0.0, 0.06, vUv.y) * smoothstep(1.0, 0.94, vUv.y);
+      float tubeFade = smoothstep(0.0, 0.05, vUv.y) * smoothstep(1.0, 0.95, vUv.y);
       color *= (1.0 - vFogFactor) * conduitFade;
 
-      float alpha = clamp(0.78 + packet * 0.22 + fastSpark * 0.22, 0.0, 1.0) * tubeFade * conduitFade * (1.0 - vFogFactor);
+      float alpha = clamp(0.85 + packet * 0.3 + fastSpark * 0.3, 0.0, 1.0) * tubeFade * conduitFade * (1.0 - vFogFactor);
       gl_FragColor = vec4(color, alpha);
     }
   `,
@@ -1970,21 +1955,18 @@ const PerineuriumSheathShader = {
 
     void main() {
       vec3 viewDir = normalize(-vWorldPos);
-      float fresnel = pow(1.0 - max(0.0, dot(vNormal, viewDir)), 3.0);
+      float fresnel = pow(1.0 - max(0.0, dot(vNormal, viewDir)), 3.5);
 
-      float sheathFibers = sin(vUv.x * 32.0 + sin(vUv.y * 6.0) * 3.0) * 0.5 + 0.5;
-      float membraneWave = pow(sin(vUv.y * 16.0 - uTime * 8.0) * 0.5 + 0.5, 10.0);
+      float membraneWave = pow(sin(vUv.y * 20.0 - uTime * 10.0) * 0.5 + 0.5, 12.0);
+      vec3 cGlow = vec3(0.0, 0.70, 1.0);
 
-      vec3 cMembrane = vec3(0.18, 0.22, 0.28);
-      vec3 cGlow = vec3(0.0, 0.72, 0.95);
+      vec3 color = cGlow * (membraneWave * 0.8 + fresnel * 0.75);
 
-      vec3 color = cMembrane * 0.4 + cGlow * (membraneWave * 0.75 + fresnel * 0.6) + vec3(0.06) * sheathFibers;
-
-      float fadeIn = smoothstep(-6.8, -11.0, -uCameraZ);
-      float fadeOut = smoothstep(-32.0, -28.5, vWorldPos.z);
+      float fadeIn = smoothstep(-4.5, -8.0, uCameraZ);
+      float fadeOut = smoothstep(-34.0, -30.5, vWorldPos.z);
       float conduitFade = clamp(fadeIn * fadeOut, 0.0, 1.0);
 
-      float alpha = (0.16 + fresnel * 0.32 + membraneWave * 0.22) * conduitFade * (1.0 - vFogFactor);
+      float alpha = (0.08 + fresnel * 0.22 + membraneWave * 0.15) * conduitFade * (1.0 - vFogFactor);
       gl_FragColor = vec4(color * (1.0 - vFogFactor), alpha);
     }
   `,
@@ -2000,7 +1982,7 @@ function SynapticSparkParticles({ time }: { time: number }) {
     const offs = new Float32Array(count);
     for (let i = 0; i < count; i++) {
       offs[i] = i / count;
-      const pt = CORKSCREW_SPLINE.getPointAt(offs[i]);
+      const pt = CORKSCREW_SPLINE.getPointAt(offs[i]).add(new THREE.Vector3(0, -0.55, 0));
       pos[i * 3] = pt.x;
       pos[i * 3 + 1] = pt.y;
       pos[i * 3 + 2] = pt.z;
@@ -2069,42 +2051,45 @@ function BiologicalNervePlexus({ time }: { time: number }) {
   const gangliaDummy = useMemo(() => new THREE.Object3D(), []);
 
   // 1. Compute continuous, twist-free parallel transport frame along CORKSCREW_SPLINE
-  const { points, normals, binormals } = useMemo(() => {
+  const { points, normals } = useMemo(() => {
     return computeBishopFrames(CORKSCREW_SPLINE, 120);
   }, []);
 
-  // 2. Central Primary Spinal Cord Core Conduit
+  // 2. Central Primary Cyber-Blue Core Conduit running slightly below camera
   const coreConduitGeo = useMemo(() => {
-    return new THREE.TubeGeometry(CORKSCREW_SPLINE, 120, 0.32, 8, false);
-  }, []);
+    const centerPoints = points.map((pt) => pt.clone().add(new THREE.Vector3(0, -0.55, 0)));
+    const curve = new THREE.CatmullRomCurve3(centerPoints, false, "catmullrom", 0.35);
+    return new THREE.TubeGeometry(curve, 140, 0.12, 8, false);
+  }, [points]);
 
-  // 3. 6 Braided Fascicle Tubes spiraling around the nerve trunk
-  const fascicleGeometries = useMemo(() => {
+  // 3. Cyber Roller Coaster Twin Rails (Left & Right) + Glowing Neon Cross-Ties
+  const leftRailGeo = useMemo(() => {
+    const leftPoints = points.map((pt, k) =>
+      pt.clone().addScaledVector(normals[k], -0.38).add(new THREE.Vector3(0, -0.55, 0))
+    );
+    const curve = new THREE.CatmullRomCurve3(leftPoints, false, "catmullrom", 0.35);
+    return new THREE.TubeGeometry(curve, 140, 0.065, 8, false);
+  }, [points, normals]);
+
+  const rightRailGeo = useMemo(() => {
+    const rightPoints = points.map((pt, k) =>
+      pt.clone().addScaledVector(normals[k], 0.38).add(new THREE.Vector3(0, -0.55, 0))
+    );
+    const curve = new THREE.CatmullRomCurve3(rightPoints, false, "catmullrom", 0.35);
+    return new THREE.TubeGeometry(curve, 140, 0.065, 8, false);
+  }, [points, normals]);
+
+  const crossTieGeometries = useMemo(() => {
     const geos: THREE.TubeGeometry[] = [];
-    const numFascicles = 6;
-    const segments = points.length - 1;
-
-    for (let f = 0; f < numFascicles; f++) {
-      const fPoints: THREE.Vector3[] = [];
-      const phase = (f * Math.PI * 2) / numFascicles;
-
-      for (let k = 0; k <= segments; k++) {
-        const u = k / segments;
-        const angle = u * Math.PI * 2 * 5.5 + phase;
-        const rad = 1.35 * (0.65 + 0.45 * Math.sin(u * Math.PI));
-        const wobble = Math.sin(u * 14.0 + phase * 2.0) * 0.08;
-
-        const pt = points[k].clone()
-          .addScaledVector(normals[k], Math.cos(angle) * (rad + wobble))
-          .addScaledVector(binormals[k], Math.sin(angle) * (rad + wobble));
-        fPoints.push(pt);
-      }
-
-      const curve = new THREE.CatmullRomCurve3(fPoints, false, "catmullrom", 0.35);
-      geos.push(new THREE.TubeGeometry(curve, 120, 0.18, 8, false));
+    const step = 3;
+    for (let k = 2; k < points.length - 2; k += step) {
+      const pLeft = points[k].clone().addScaledVector(normals[k], -0.38).add(new THREE.Vector3(0, -0.55, 0));
+      const pRight = points[k].clone().addScaledVector(normals[k], 0.38).add(new THREE.Vector3(0, -0.55, 0));
+      const tieCurve = new THREE.CatmullRomCurve3([pLeft, points[k].clone().add(new THREE.Vector3(0, -0.55, 0)), pRight], false, "catmullrom", 0.1);
+      geos.push(new THREE.TubeGeometry(tieCurve, 8, 0.04, 6, false));
     }
     return geos;
-  }, [points, normals, binormals]);
+  }, [points, normals]);
 
   // 4. Cranial Brainstem Rootlets (Fila Radicularia) anchoring into medulla oblongata
   const rootletGeometries = useMemo(() => {
@@ -2207,9 +2192,9 @@ function BiologicalNervePlexus({ time }: { time: number }) {
     return { cardiacGeometries: geos, cardiacTargets: targets };
   }, []);
 
-  // 7. Outer Perineurium Sheath Geometry
+  // 7. Outer Ethereal Cyan Aura Sheath (Sleek 0.75 radius, 0 overdraw stall)
   const sheathGeo = useMemo(() => {
-    return new THREE.TubeGeometry(CORKSCREW_SPLINE, 120, 2.25, 18, false);
+    return new THREE.TubeGeometry(CORKSCREW_SPLINE, 100, 0.75, 12, false);
   }, []);
 
   // 8. Materials
@@ -2278,7 +2263,9 @@ function BiologicalNervePlexus({ time }: { time: number }) {
   useEffect(() => {
     return () => {
       coreConduitGeo.dispose();
-      fascicleGeometries.forEach((g) => g.dispose());
+      leftRailGeo.dispose();
+      rightRailGeo.dispose();
+      crossTieGeometries.forEach((g) => g.dispose());
       rootletGeometries.forEach((g) => g.dispose());
       arborGeometries.forEach((g) => g.dispose());
       cardiacGeometries.forEach((g) => g.dispose());
@@ -2289,7 +2276,9 @@ function BiologicalNervePlexus({ time }: { time: number }) {
     };
   }, [
     coreConduitGeo,
-    fascicleGeometries,
+    leftRailGeo,
+    rightRailGeo,
+    crossTieGeometries,
     rootletGeometries,
     arborGeometries,
     cardiacGeometries,
@@ -2326,16 +2315,18 @@ function BiologicalNervePlexus({ time }: { time: number }) {
 
   return (
     <group>
-      {/* Central Primary Spinal Cord Core Conduit */}
+      {/* Central Superconducting Blue Energy Rail */}
       <mesh geometry={coreConduitGeo} material={axonMaterial} />
 
-      {/* Outer translucent perineurium collagen sheath */}
-      <mesh geometry={sheathGeo} material={sheathMaterial} />
+      {/* Cyber-Blue Roller Coaster Twin Guide Rails */}
+      <mesh geometry={leftRailGeo} material={axonMaterial} />
+      <mesh geometry={rightRailGeo} material={axonMaterial} />
 
-      {/* 6 braided neural fascicles with Nodes of Ranvier & Action Potentials */}
-      {fascicleGeometries.map((geo, idx) => (
-        <mesh key={`fascicle-${idx}`} geometry={geo} material={axonMaterial} />
+      {/* Glowing Neon Roller Coaster Cross Ties / Rungs */}
+      {crossTieGeometries.map((geo, idx) => (
+        <mesh key={`tie-${idx}`} geometry={geo} material={axonMaterial} />
       ))}
+
 
       {/* Cranial rootlets anchoring into medulla oblongata */}
       {rootletGeometries.map((geo, idx) => (
@@ -2915,7 +2906,7 @@ const BLOODSTREAM_LOGOS: BloodstreamLogoItem[] = [
 function ArteryCorridorTunnel({ time }: { time: number }) {
   const tunnelGeo = useMemo(() => {
     const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0.265, -16.0, -35.5),
+      new THREE.Vector3(0.265, -16.0, -33.2),
       new THREE.Vector3(-0.25, -16.0, -43.0),
       new THREE.Vector3(0.30, -16.0, -50.0),
       new THREE.Vector3(-0.20, -16.0, -57.0),
@@ -2970,6 +2961,12 @@ function ArteryCorridorTunnel({ time }: { time: number }) {
           float vascularGrid = pow(sin(vUv.x * 36.0 + sin(vWorldPos.z * 0.8) * 3.0) * 0.5 + 0.5, 8.0);
           base += cVein * vascularGrid * 0.35;
           base += cGlow * pow(pulse, 4.0) * 0.18;
+
+          // Rushing arterial plasma streamlines & glowing exit surge (eliminates dead black void!)
+          float exitSurge = smoothstep(-44.0, -33.2, vWorldPos.z);
+          vec3 cArterialRed = vec3(0.65, 0.08, 0.14);
+          float speedLines = pow(sin(vWorldPos.z * 1.8 - uTime * 14.0 + vUv.x * 12.0) * 0.5 + 0.5, 6.0);
+          base += cArterialRed * exitSurge * 0.75 + vec3(1.0, 0.35, 0.35) * speedLines * exitSurge * 0.9;
 
           // Muscular striation ridges with sleek specular sheen
           float ridges = sin(vWorldPos.z * 5.0) * 0.05;
@@ -3026,13 +3023,13 @@ function BloodstreamErythrocytes({ time }: { time: number }) {
   }, []);
   const erythrocyteMat = useMemo(() => {
     return new THREE.MeshStandardMaterial({
-      color: "#540205",
-      emissive: new THREE.Color("#160002"),
-      emissiveIntensity: 0.35,
+      color: "#e11d48",
+      emissive: new THREE.Color("#9f1239"),
+      emissiveIntensity: 0.85,
       roughness: 0.18,
       metalness: 0.15,
       transparent: true,
-      opacity: 0.78,
+      opacity: 0.88,
       depthWrite: false,
     });
   }, []);
@@ -3058,7 +3055,7 @@ function BloodstreamErythrocytes({ time }: { time: number }) {
     }[] = [];
 
     for (let i = 0; i < count; i++) {
-      const z = -36.0 - Math.random() * 38.0; // Confined strictly to bloodstream corridor Z: -36 to -74
+      const z = -33.2 - Math.random() * 42.0; // Spans seamlessly from heart exit Z: -33.2 to -75.2
       const angle = Math.random() * Math.PI * 2.0;
       const r = 0.5 + Math.pow(Math.random(), 0.75) * 3.4;
       const x = EYE_TARGET.x + Math.cos(angle) * r;
@@ -3250,23 +3247,55 @@ function HighFidelityLogoBadge({
   const floatY = Math.sin(time * 1.2 + item.position[2] * 0.1) * 0.12;
 
   // Gentle inward perspective tilt so logos directly face the center corridor camera
-  const tiltY =
-    item.position[0] < EYE_TARGET.x - 0.5
+  const { size } = useThree();
+  const isNarrow = size.width < 768 || size.width / size.height < 1.0;
+  const isMobilePortrait = size.width < 540 || size.width / size.height < 0.68;
+
+  const tiltY = isMobilePortrait
+    ? 0
+    : item.position[0] < EYE_TARGET.x - 0.5
       ? 0.22
       : item.position[0] > EYE_TARGET.x + 0.5
         ? -0.22
         : 0;
 
-  const { size } = useThree();
-  const isNarrow = size.width < 768 || size.width / size.height < 1.0;
-  const badgeScale = isNarrow ? 0.72 : 1.0;
-  const posX = isNarrow ? item.position[0] * 0.75 : item.position[0];
+  // Calibrated scale & positioning ensuring 100% visibility on Samsung Galaxy S23 & narrow portrait screens
+  const baseBadgeScale = isMobilePortrait ? 0.22 : isNarrow ? 0.45 : 1.0;
+  const posX = isMobilePortrait
+    ? 0.0
+    : isNarrow
+      ? item.position[0] * 0.55
+      : item.position[0];
+
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(({ camera }) => {
+    if (!groupRef.current) return;
+    const camZ = camera.position.z;
+    const itemZ = item.position[2];
+    const distZ = camZ - itemZ;
+
+    if (distZ <= 1.0) {
+      // Camera reached proximity threshold: hide cleanly so it never clips camera lens
+      groupRef.current.visible = false;
+    } else if (distZ < 2.4) {
+      groupRef.current.visible = true;
+      const progress = Math.max(0, (distZ - 1.0) / 1.4); // 0.0 to 1.0
+      // Elegantly scale down and dissolve into the vascular flow as camera approaches
+      const dynamicScale = baseBadgeScale * (0.15 + 0.85 * progress);
+      groupRef.current.scale.setScalar(dynamicScale);
+    } else {
+      groupRef.current.visible = true;
+      groupRef.current.scale.setScalar(baseBadgeScale);
+    }
+  });
 
   return (
     <group
+      ref={groupRef}
       position={[posX, item.position[1] + floatY, item.position[2]]}
       rotation={[0, tiltY, 0]}
-      scale={[badgeScale, badgeScale, badgeScale]}
+      scale={[baseBadgeScale, baseBadgeScale, baseBadgeScale]}
     >
       {/* 1. Sleek Obsidian Glass Backplate */}
       <mesh position={[0, 0, -0.05]}>
@@ -3734,6 +3763,8 @@ function SceneContent({ scrollRef, onBreachComplete, onProgressTick }: SceneCont
     if (camera instanceof THREE.PerspectiveCamera) {
       // Responsive Mobile Portrait Aspect Compensation (Galaxy S23, iPhone, etc.)
       const aspect = camera.aspect;
+      let targetX = pose.x;
+      let targetLookX = pose.lookX;
       let targetZ = pose.z;
       let targetFov = pose.fov;
 
@@ -3742,8 +3773,6 @@ function SceneContent({ scrollRef, onBreachComplete, onProgressTick }: SceneCont
         const aspectComp = Math.max(1.0, 0.92 / Math.max(0.38, aspect));
 
         // 1. Initial portrait rest and eye approach (p < 0.135):
-        // Pull camera back and gently widen FOV so the circular portrait fits edge-to-edge
-        // with ~12% breathing room, then smoothly converge right into the pupil macro lock
         if (p < 0.135) {
           const t = Math.min(1.0, Math.max(0, (p - 0.02) / (0.135 - 0.02)));
           let blend = 1.0 - t;
@@ -3751,10 +3780,18 @@ function SceneContent({ scrollRef, onBreachComplete, onProgressTick }: SceneCont
           targetZ += (aspectComp - 1.0) * 2.85 * blend;
           targetFov += (aspectComp - 1.0) * 11.5 * blend;
         }
+
+        // 2. Software Bloodstream Gallery (p: 0.62 -> 0.82):
+        // Center camera along central corridor so Premiere, DaVinci, Blender, Houdini are 100% dead center
+        if (p >= 0.62 && p <= 0.82) {
+          targetFov += 8.0;
+          targetX = 0.0;
+          targetLookX = 0.0;
+        }
       }
 
-      camera.position.set(pose.x, pose.y, targetZ);
-      camera.lookAt(pose.lookX, pose.lookY, pose.lookZ);
+      camera.position.set(targetX, pose.y, targetZ);
+      camera.lookAt(targetLookX, pose.lookY, pose.lookZ);
       camera.fov = targetFov;
       camera.updateProjectionMatrix();
     } else {
@@ -3795,16 +3832,16 @@ function SceneContent({ scrollRef, onBreachComplete, onProgressTick }: SceneCont
       spineGroupRef.current.visible = camZ < -6.5 && camZ > -33.0;
     }
 
-    // 5. Beating Heart Cavern: ONLY visible during cardiac approach & descent (camZ <= -20.0 && camZ > -48.0)
-    // Completely hidden at the start so no heart ever peeks beneath the shirt!
+    // 5. Beating Heart Cavern: Pre-warmed as soon as camera enters cortex (camZ <= -5.0 && camZ > -48.0)
+    // Deep black fog completely obscures it until descent, but GPU keeps all shaders & buffers resident in VRAM!
     if (heartGroupRef.current) {
-      heartGroupRef.current.visible = camZ <= -20.0 && camZ > -48.0;
+      heartGroupRef.current.visible = camZ <= -5.0 && camZ > -48.0;
     }
 
-    // 6. Arterial Bloodstream, Logos & Monolith: ONLY active in bloodstream corridor (camZ <= -35.0 && camZ > -90.0)
-    // Completely hidden at the start so no logos ever peek through!
+    // 6. Arterial Bloodstream, Logos & Monolith: Pre-warmed during nerve dive (camZ <= -22.0 && camZ > -92.0)
+    // Guarantees zero-latency exit from heart into bloodstream!
     if (bloodstreamGroupRef.current) {
-      bloodstreamGroupRef.current.visible = camZ <= -35.0 && camZ > -90.0;
+      bloodstreamGroupRef.current.visible = camZ <= -22.0 && camZ > -92.0;
     }
 
     // 7. Luxury Timepiece Dive: ONLY active during horology climax (camZ <= -65.0)
@@ -3907,8 +3944,9 @@ function CinematicPostProcessing({ scrollRef }: { scrollRef: React.MutableRefObj
     const p = scrollRef.current;
 
     // Upstream (eye, brain, heart, bloodstream, monolith) requires pristine clarity and 120 FPS maximum performance
-    // Zero bokeh gathering when outside the macro caliber watch view
-    if (p < 0.93) {
+    // Zero bokeh gathering when outside the macro caliber watch view, and bypassed on mobile for guaranteed 120 FPS
+    const isMobile = typeof window !== "undefined" && (window.innerWidth < 768 || (window.innerWidth / window.innerHeight) < 0.85);
+    if (isMobile || p < 0.93) {
       if (dofRef.current.bokehScale !== 0) {
         dofRef.current.bokehScale = 0;
       }

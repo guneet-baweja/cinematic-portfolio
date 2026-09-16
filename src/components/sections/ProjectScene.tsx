@@ -5,7 +5,15 @@ import { VideoProject } from "./VideoProject";
 import type { Project } from "../../types/project";
 import "./ProjectScene.css";
 
-export function ProjectScene({ project, index }: { project: Project; index: number }) {
+export function ProjectScene({
+  project,
+  index,
+  onOpenCinema,
+}: {
+  project: Project;
+  index: number;
+  onOpenCinema?: (project: Project) => void;
+}) {
   const sectionRef = useRef<HTMLElement>(null);
   const reversed = index % 2 === 1;
 
@@ -46,7 +54,12 @@ export function ProjectScene({ project, index }: { project: Project; index: numb
       <div className="container project-scene__inner">
         <div className="project-scene__media">
           <div className="project-scene__frame">
-            <VideoProject src={project.video} poster={project.poster} />
+            <VideoProject
+              src={project.video}
+              poster={project.poster}
+              title={project.title}
+              onOpenCinema={() => onOpenCinema?.(project)}
+            />
           </div>
         </div>
         <div className="project-scene__meta">

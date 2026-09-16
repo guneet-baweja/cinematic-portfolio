@@ -1096,8 +1096,8 @@ export function LuxuryTimepieceDive({ scrollP, scrollRef }: LuxuryTimepieceDiveP
         watchAssemblyRef.current.visible = false;
       } else {
         watchAssemblyRef.current.visible = true;
-        // Strict 0.62 scale: zero artificial ballooning or hand blow-up
-        watchAssemblyRef.current.scale.set(0.62, 0.62, 0.62);
+        // Responsive calibrated scale: 0.46 on mobile portrait, 0.62 on desktop
+        watchAssemblyRef.current.scale.set(watchScale, watchScale, watchScale);
       }
     }
 
@@ -1106,7 +1106,8 @@ export function LuxuryTimepieceDive({ scrollP, scrollRef }: LuxuryTimepieceDiveP
     }
 
     if (reflGroupRef.current) {
-      reflGroupRef.current.visible = !isInterior;
+      // Inverted reflection disabled on mobile for zero stutter & pure 120 FPS
+      reflGroupRef.current.visible = !isInterior && !isNarrow;
     }
 
     // Dial center aperture iris opening reveals ticking caliber directly beneath

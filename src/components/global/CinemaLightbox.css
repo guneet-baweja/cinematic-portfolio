@@ -1,0 +1,398 @@
+/* ==========================================================================
+   CINEMA THEATER LIGHTBOX MODAL - 120 FPS ULTRA-PREMIUM HUD
+   ========================================================================== */
+
+.cinema-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.cinema-lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 4, 8, 0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  cursor: pointer;
+}
+
+.cinema-lightbox__stage {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1240px;
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  background: #06070a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 180, 255, 0.12);
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   TOP HEADER HUD
+   ========================================================================== */
+.cinema-lightbox__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(10, 12, 18, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.cinema-lightbox__branding {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cinema-lightbox__badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: #00d4ff;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.cinema-lightbox__meta-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  color: #8a94a6;
+  letter-spacing: 0.05em;
+}
+
+.cinema-lightbox__title {
+  margin: 0;
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.cinema-lightbox__top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cinema-lightbox__btn,
+.cinema-lightbox__close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cinema-lightbox__btn:hover,
+.cinema-lightbox__close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #00d4ff;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.25);
+}
+
+.cinema-lightbox__close-btn {
+  background: rgba(255, 40, 60, 0.12);
+  border-color: rgba(255, 60, 80, 0.3);
+  color: #ff6677;
+}
+
+.cinema-lightbox__close-btn:hover {
+  background: #ff2a44;
+  border-color: #ff2a44;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 42, 68, 0.45);
+}
+
+/* ==========================================================================
+   VIDEO VIEWPORT & STAGE
+   ========================================================================== */
+.cinema-lightbox__viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: calc(94vh - 150px);
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.cinema-lightbox__video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.cinema-lightbox__play-badge {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.25rem 2rem;
+  background: rgba(6, 8, 14, 0.85);
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 212, 255, 0.25);
+  pointer-events: none;
+  animation: cinemaPulse 2s infinite ease-in-out;
+}
+
+@keyframes cinemaPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.cinema-lightbox__play-icon {
+  font-size: 2.2rem;
+  color: #00d4ff;
+}
+
+.cinema-lightbox__play-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: #cbd5e1;
+}
+
+/* ==========================================================================
+   BOTTOM CINEMA CONTROLS BAR
+   ========================================================================== */
+.cinema-lightbox__controls {
+  padding: 0.75rem 1.5rem 1rem;
+  background: rgba(10, 12, 18, 0.9);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.cinema-lightbox__progress-container {
+  width: 100%;
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+
+.cinema-lightbox__progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: height 0.15s ease;
+}
+
+.cinema-lightbox__progress-container:hover .cinema-lightbox__progress-track {
+  height: 8px;
+}
+
+.cinema-lightbox__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0070f3 0%, #00dfd8 100%);
+  border-radius: 4px;
+  position: relative;
+  box-shadow: 0 0 12px rgba(0, 223, 216, 0.5);
+}
+
+.cinema-lightbox__progress-handle {
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+}
+
+.cinema-lightbox__controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cinema-lightbox__controls-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.cinema-lightbox__control-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.cinema-lightbox__control-btn:hover {
+  background: #00d4ff;
+  border-color: #00d4ff;
+  color: #040810;
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.4);
+}
+
+.cinema-lightbox__volume-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cinema-lightbox__volume-slider {
+  width: 80px;
+  height: 4px;
+  accent-color: #00d4ff;
+  cursor: pointer;
+}
+
+.cinema-lightbox__volume-val {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  color: #94a3b8;
+  min-width: 32px;
+}
+
+.cinema-lightbox__time-readout {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cinema-lightbox__time-sep {
+  color: #64748b;
+}
+
+.cinema-lightbox__controls-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cinema-lightbox__tags {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cinema-lightbox__role-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.cinema-lightbox__tech-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   AUTO-HIDE CONTROLS ON IDLE (FULL CINEMATIC IMMERSION)
+   ========================================================================== */
+.cinema-lightbox.hide-controls .cinema-lightbox__header {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+.cinema-lightbox.hide-controls .cinema-lightbox__controls {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS (GALAXY S23 & NARROW SCREENS)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .cinema-lightbox {
+    padding: 0.5rem;
+  }
+
+  .cinema-lightbox__stage {
+    max-height: 98vh;
+    border-radius: 10px;
+  }
+
+  .cinema-lightbox__header {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .cinema-lightbox__top-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cinema-lightbox__controls {
+    padding: 0.6rem 1rem 0.8rem;
+    gap: 0.5rem;
+  }
+
+  .cinema-lightbox__controls-row {
+    gap: 0.75rem;
+  }
+
+  .cinema-lightbox__tags {
+    display: none;
+  }
+
+  .cinema-lightbox__volume-slider {
+    width: 60px;
+  }
+}
