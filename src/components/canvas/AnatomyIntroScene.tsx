@@ -2797,7 +2797,8 @@ function AnatomicalHeart({ cameraZ: _cameraZ }: { cameraZ: number; time: number 
       pulse = Math.sin(tDub * Math.PI) * 0.045;
     }
 
-    const baseScale = 3.2; // Perfectly proportioned so camera glides past without clipping
+    const isNarrow = typeof window !== "undefined" && window.innerWidth < 768;
+    const baseScale = isNarrow ? 2.3 : 3.2; // Perfectly proportioned so camera glides past without clipping
     heartGroupRef.current.scale.set(
       baseScale * (1.0 - pulse * 0.5),
       baseScale * (1.0 + pulse * 0.8),
@@ -3256,10 +3257,16 @@ function HighFidelityLogoBadge({
         ? -0.22
         : 0;
 
+  const { size } = useThree();
+  const isNarrow = size.width < 768 || size.width / size.height < 1.0;
+  const badgeScale = isNarrow ? 0.72 : 1.0;
+  const posX = isNarrow ? item.position[0] * 0.75 : item.position[0];
+
   return (
     <group
-      position={[item.position[0], item.position[1] + floatY, item.position[2]]}
+      position={[posX, item.position[1] + floatY, item.position[2]]}
       rotation={[0, tiltY, 0]}
+      scale={[badgeScale, badgeScale, badgeScale]}
     >
       {/* 1. Sleek Obsidian Glass Backplate */}
       <mesh position={[0, 0, -0.05]}>
@@ -3530,8 +3537,14 @@ function VisceralBloodDroplets() {
 }
 
 function ColossalBloodstreamMonolith({ time }: { time: number }) {
+  const { size } = useThree();
+  const isNarrow = size.width < 768 || size.width / size.height < 1.0;
+  const mobileScale = isNarrow
+    ? Math.max(0.20, Math.min(0.24, (size.width / size.height) * 0.50))
+    : 1.0;
+
   // Ultra-subtle monolithic breathing pulse
-  const subtleScale = 1.0 + Math.sin(time * 0.6) * 0.005;
+  const subtleScale = (1.0 + Math.sin(time * 0.6) * 0.005) * mobileScale;
 
   // Authentic procedural arterial blood splatter textures for Line 1 and Line 2
   const monolithTextures: MonolithBloodTextures = useMemo(() => getMonolithBloodTextures(), []);
@@ -3718,18 +3731,41 @@ function SceneContent({ scrollRef, onBreachComplete, onProgressTick }: SceneCont
     // CONTINUOUS 3D CAMERA POSE EVALUATION (Read directly from damped ref - 0 React renders)
     const pose = evalCameraPose(p);
 
-    camera.position.set(pose.x, pose.y, pose.z);
-    camera.lookAt(pose.lookX, pose.lookY, pose.lookZ);
-
     if (camera instanceof THREE.PerspectiveCamera) {
-      camera.fov = pose.fov;
+      // Responsive Mobile Portrait Aspect Compensation (Galaxy S23, iPhone, etc.)
+      const aspect = camera.aspect;
+      let targetZ = pose.z;
+      let targetFov = pose.fov;
+
+      if (aspect < 1.0) {
+        // Compensation factor to maintain horizontal framing
+        const aspectComp = Math.max(1.0, 0.92 / Math.max(0.38, aspect));
+
+        // 1. Initial portrait rest and eye approach (p < 0.135):
+        // Pull camera back and gently widen FOV so the circular portrait fits edge-to-edge
+        // with ~12% breathing room, then smoothly converge right into the pupil macro lock
+        if (p < 0.135) {
+          const t = Math.min(1.0, Math.max(0, (p - 0.02) / (0.135 - 0.02)));
+          let blend = 1.0 - t;
+          blend = blend * blend * (3.0 - 2.0 * blend);
+          targetZ += (aspectComp - 1.0) * 2.85 * blend;
+          targetFov += (aspectComp - 1.0) * 11.5 * blend;
+        }
+      }
+
+      camera.position.set(pose.x, pose.y, targetZ);
+      camera.lookAt(pose.lookX, pose.lookY, pose.lookZ);
+      camera.fov = targetFov;
       camera.updateProjectionMatrix();
+    } else {
+      camera.position.set(pose.x, pose.y, pose.z);
+      camera.lookAt(pose.lookX, pose.lookY, pose.lookZ);
     }
 
     // Keep DOM typography and postprocessing synchronously locked to damped progress
     onProgressTick?.(p);
 
-    const camZ = pose.z;
+    const camZ = camera.position.z;
 
     // AGGRESSIVE DISTANCE & FRUSTUM CULLING (120 FPS ARCHITECTURE)
     // 1. Portrait Plane: Visible from start until camera breaches into neural cortex (camZ > -2.0)
@@ -3949,6 +3985,7 @@ export function AnatomyIntroScene({
   const [isGenesisActive, setIsGenesisActive] = useState(true);
 
   // DOM Typography overlay refs (peak during key narrative moments)
+  const heroOverlayRef = useRef<HTMLDivElement>(null);
   const brainTitleRef = useRef<HTMLHeadingElement>(null);
   const brainSubtitleRef = useRef<HTMLParagraphElement>(null);
   const heartTitleRef = useRef<HTMLHeadingElement>(null);
@@ -3959,6 +3996,18 @@ export function AnatomyIntroScene({
 
   const updateDomTypography = (p: number) => {
     const pose = evalCameraPose(p);
+
+    // Step 0: Hero Opening Typography (Pristine framing at rest p in [0.00, 0.06])
+    let heroOp = 0.0;
+    if (p <= 0.02) {
+      heroOp = 1.0;
+    } else if (p < 0.06) {
+      heroOp = 1.0 - (p - 0.02) / (0.06 - 0.02);
+    }
+    if (heroOverlayRef.current) {
+      heroOverlayRef.current.style.opacity = String(heroOp);
+      heroOverlayRef.current.style.visibility = heroOp > 0.01 ? "visible" : "hidden";
+    }
 
     // Step 1: Brain Title Opacity
     let bTitleOp = 0.0;
@@ -4184,6 +4233,207 @@ export function AnatomyIntroScene({
         {!isMobile && <CinematicPostProcessing scrollRef={scrollProgressRef} />}
       </Canvas>
 
+      {/* DOM HERO OPENING TYPOGRAPHY OVERLAY: Phase 1 Resting Portrait */}
+      <div
+        ref={heroOverlayRef}
+        className="anatomy-hero-overlay"
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "clamp(1.2rem, 3.5vw, 2.5rem) clamp(1rem, 4vw, 3rem)",
+          boxSizing: "border-box",
+          zIndex: 85,
+          pointerEvents: "none",
+          transition: "opacity 0.2s ease",
+        }}
+      >
+        {/* Top Header & Branding Block (Framed cleanly ABOVE the circular portrait) */}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            maxWidth: "1400px",
+          }}
+        >
+          {/* Top Telemetry Header */}
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "clamp(0.35rem, 1.0vh, 0.85rem)",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                background: "rgba(255, 255, 255, 0.04)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+                borderRadius: "9999px",
+                padding: "0.35rem 0.85rem",
+                backdropFilter: "blur(12px)",
+              }}
+            >
+              <span
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: "#FF5F1F",
+                  boxShadow: "0 0 8px #FF5F1F",
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: "Space Mono, monospace",
+                  fontSize: "clamp(0.65rem, 1.1vw, 0.78rem)",
+                  letterSpacing: "0.14em",
+                  color: "#e2e8f0",
+                  textTransform: "uppercase",
+                }}
+              >
+                00 / GENESIS PROLOGUE
+              </span>
+            </div>
+
+            <div
+              style={{
+                fontFamily: "Space Mono, monospace",
+                fontSize: "clamp(0.65rem, 1vw, 0.75rem)",
+                letterSpacing: "0.12em",
+                color: "rgba(255, 255, 255, 0.5)",
+              }}
+            >
+              SMPTE 00:00:00:00
+            </div>
+          </div>
+
+          {/* Upper Title (Sitting cleanly in the upper space above the portrait) */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "Space Mono, monospace",
+                fontSize: "clamp(0.62rem, 1.1vw, 0.78rem)",
+                letterSpacing: "0.22em",
+                color: "#38bdf8",
+                textTransform: "uppercase",
+                marginBottom: "0.25rem",
+                textShadow: "0 0 12px rgba(56, 189, 248, 0.6)",
+              }}
+            >
+              PORTFOLIO // CRAFT & VISION
+            </span>
+            <h1
+              style={{
+                fontFamily: "Space Grotesk, sans-serif",
+                fontSize: "clamp(1.65rem, 5.2vw, 3.4rem)",
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+                color: "#ffffff",
+                margin: "0 0 0.25rem 0",
+                textTransform: "uppercase",
+                textShadow: "0 2px 20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 255, 255, 0.25)",
+              }}
+            >
+              GUNEET BAWEJA
+            </h1>
+            <p
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "clamp(0.68rem, 1.2vw, 0.88rem)",
+                fontWeight: 500,
+                letterSpacing: "0.08em",
+                color: "rgba(255, 255, 255, 0.72)",
+                margin: 0,
+                textTransform: "uppercase",
+              }}
+            >
+              CINEMATIC VIDEO EDITOR & MOTION DESIGNER
+            </p>
+          </div>
+        </div>
+
+        {/* Lower Call to Action / Scroll Telemetry (Framed cleanly below the circular portrait) */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            marginBottom: "clamp(0.5rem, 1.5vh, 1.5rem)",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "Space Mono, monospace",
+              fontSize: "clamp(0.7rem, 1.2vw, 0.85rem)",
+              letterSpacing: "0.18em",
+              color: "#ffaa33",
+              textTransform: "uppercase",
+              marginBottom: "0.75rem",
+              textShadow: "0 0 14px rgba(255, 170, 51, 0.6)",
+            }}
+          >
+            THE ARCHITECTURE OF AN EDIT
+          </p>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.6rem",
+              padding: "0.55rem 1.2rem",
+              background: "rgba(255, 95, 31, 0.08)",
+              border: "1px solid rgba(255, 95, 31, 0.35)",
+              borderRadius: "9999px",
+              boxShadow: "0 0 20px rgba(255, 95, 31, 0.2)",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "Space Mono, monospace",
+                fontSize: "clamp(0.68rem, 1.1vw, 0.78rem)",
+                fontWeight: 700,
+                letterSpacing: "0.16em",
+                color: "#FF5F1F",
+                textTransform: "uppercase",
+              }}
+            >
+              SCROLL TO DIVE
+            </span>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#FF5F1F"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="anatomy-scroll-arrow"
+            >
+              <path d="M12 5v14M19 12l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
       {/* DOM TYPOGRAPHY OVERLAY: Phase 2 Brain Core Split */}
       <div
         className="anatomy-brain-text-overlay"
@@ -4309,7 +4559,7 @@ export function AnatomyIntroScene({
           flexDirection: "column",
           alignItems: "flex-start",
           justifyContent: "flex-end",
-          padding: "clamp(2rem, 5.5vw, 5.5rem)",
+          padding: "clamp(1.25rem, 4.5vw, 5.5rem)",
           boxSizing: "border-box",
           zIndex: 88,
           pointerEvents: "none",
@@ -4342,9 +4592,9 @@ export function AnatomyIntroScene({
           <span
             style={{
               fontFamily: "Space Mono, monospace",
-              fontSize: "clamp(0.75rem, 1.2vw, 0.95rem)",
+              fontSize: "clamp(0.72rem, 1.2vw, 0.95rem)",
               fontWeight: 700,
-              letterSpacing: "0.22em",
+              letterSpacing: "0.18em",
               color: "#fbbf24",
               textTransform: "uppercase",
               textShadow: "0 0 14px rgba(245, 158, 11, 0.6)",
@@ -4358,10 +4608,10 @@ export function AnatomyIntroScene({
           ref={watchTitleRef}
           style={{
             fontFamily: "Space Grotesk, Syne, sans-serif",
-            fontSize: "clamp(2.4rem, 6.4vw, 5.8rem)",
+            fontSize: "clamp(1.65rem, 6.8vw, 5.8rem)",
             fontWeight: 800,
             letterSpacing: "-0.015em",
-            lineHeight: 1.04,
+            lineHeight: 1.05,
             color: "#ffffff",
             margin: "0 0 1.1rem 0",
             textTransform: "uppercase",

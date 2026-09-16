@@ -122,3 +122,39 @@
 .anatomy-telemetry span {
   color: #FF5F1F;
 }
+
+/* Genesis Hero Opening Overlay (Resting Portrait Framing) */
+.anatomy-hero-overlay {
+  will-change: opacity, transform;
+}
+
+@keyframes anatomyBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+.anatomy-scroll-arrow {
+  animation: anatomyBounce 1.6s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  .anatomy-brain-text-overlay,
+  .anatomy-heart-text-overlay {
+    padding: 1.25rem;
+  }
+  .anatomy-brain-text-overlay h1,
+  .anatomy-heart-text-overlay h1 {
+    font-size: clamp(1.6rem, 7vw, 2.5rem);
+    line-height: 1.1;
+  }
+  .anatomy-brain-text-overlay p,
+  .anatomy-heart-text-overlay p {
+    font-size: clamp(0.75rem, 3.2vw, 0.95rem);
+    letter-spacing: 0.10em;
+  }
+}
+

@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // ============================================================================
@@ -1056,6 +1056,10 @@ function WarmStudioBokeh() {
 // MAIN COMPONENT: LUXURY TIMEPIECE DIVE
 // ============================================================================
 export function LuxuryTimepieceDive({ scrollP, scrollRef }: LuxuryTimepieceDiveProps) {
+  const { size } = useThree();
+  const isNarrow = size.width < 768 || size.width / size.height < 1.0;
+  const watchScale = isNarrow ? 0.46 : 0.62;
+
   const watchAssemblyRef = useRef<THREE.Group>(null);
   const hourHandRef = useRef<THREE.Group>(null);
   const minuteHandRef = useRef<THREE.Group>(null);
@@ -1222,11 +1226,11 @@ export function LuxuryTimepieceDive({ scrollP, scrollRef }: LuxuryTimepieceDiveP
         <planeGeometry args={[28, 48]} />
       </mesh>
 
-      {/* Real Inverted Reflection Clone (Flipped on Y, scaled to 0.62) */}
+      {/* Real Inverted Reflection Clone (Flipped on Y, scaled to watchScale) */}
       <group
         ref={reflGroupRef}
         position={[0, 2 * (FLOOR_Y - CENTER_Y), 0]}
-        scale={[0.62, -0.62, 0.62]}
+        scale={[watchScale, -watchScale, watchScale]}
       >
         <WatchCaseAndBracelet />
         <FlutedBezel radius={3.65} />
@@ -1243,10 +1247,10 @@ export function LuxuryTimepieceDive({ scrollP, scrollRef }: LuxuryTimepieceDiveP
 
       {/* ================================================================== */}
       {/* 3. HERO UPRIGHT TIMEPIECE ASSEMBLY (PHOTO 1)                       */}
-      {/* Framed at 0.62 scale showing bezel, dial, lugs, bracelet           */}
+      {/* Framed at watchScale showing bezel, dial, lugs, bracelet           */}
       {/* Dial center opens smoothly revealing caliber directly beneath      */}
       {/* ================================================================== */}
-      <group ref={watchAssemblyRef} scale={[0.62, 0.62, 0.62]}>
+      <group ref={watchAssemblyRef} scale={[watchScale, watchScale, watchScale]}>
         <WatchCaseAndBracelet />
         <FlutedBezel radius={3.65} />
         <WatchDialFace

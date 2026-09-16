@@ -121,7 +121,8 @@ function MasterCameraDirector() {
     // Dynamic FOV breath: wide-angle hyperspeed expansion during tunnel flight, settling cleanly to 45 for cinema
     if (camera instanceof THREE.PerspectiveCamera) {
       const tunnelFovBonus = masterP < 0.68 ? Math.sin((masterP / 0.68) * Math.PI) * 14.0 : 0;
-      const targetFov = baseFov + scrollState.physics.fovOffset + tunnelFovBonus;
+      const mobileFovBonus = camera.aspect < 1.0 ? Math.min(20.0, (1.0 - camera.aspect) * 28.0) : 0;
+      const targetFov = baseFov + scrollState.physics.fovOffset + tunnelFovBonus + mobileFovBonus;
       if (Math.abs(camera.fov - targetFov) > 0.01) {
         camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, dampFactor);
         camera.updateProjectionMatrix();
