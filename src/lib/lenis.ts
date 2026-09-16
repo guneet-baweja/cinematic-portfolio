@@ -170,9 +170,26 @@ export function initLenis(reducedMotion: boolean) {
 
   gsap.ticker.add(tickerFn);
   // Lag smoothing (500ms max, 33ms target) absorbs frame drops on 120Hz/ProMotion displays without micro-stutter
-  gsap.ticker.lagSmoothing(500, 33);
-
   ScrollTrigger.defaults({ scrub: true });
+
+  // Delegated anchor link interception for seamless Lenis scrollTo navigation
+  if (typeof document !== "undefined") {
+    document.addEventListener("click", (e) => {
+      const target = (e.target as HTMLElement).closest('a[href^="#"]');
+      if (target) {
+        const href = target.getAttribute("href");
+        if (href && href !== "#") {
+          e.preventDefault();
+          if (lenis) {
+            lenis.scrollTo(href, { offset: 0, duration: 1.2 });
+          } else {
+            const el = document.querySelector(href);
+            el?.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      }
+    });
+  }
 
   return lenis;
 }

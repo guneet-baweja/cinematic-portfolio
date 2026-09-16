@@ -93,6 +93,63 @@
   gap: 0.75rem;
 }
 
+.cinema-lightbox__direct-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 212, 255, 0.12);
+  color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cinema-lightbox__direct-btn:hover {
+  background: #00d4ff;
+  color: #030712;
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.cinema-lightbox__floating-unmute {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #00d4ff 0%, #0284c7 100%);
+  color: #030712;
+  border: 1px solid #ffffff;
+  padding: 0.65rem 1.25rem;
+  border-radius: 30px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0, 212, 255, 0.6), 0 0 15px rgba(255, 255, 255, 0.5);
+  animation: unmuteBounce 1.8s infinite;
+  transition: transform 0.2s ease;
+}
+
+@keyframes unmuteBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.cinema-lightbox__floating-unmute:hover {
+  transform: scale(1.05);
+}
+
 .cinema-lightbox__btn,
 .cinema-lightbox__close-btn {
   background: rgba(255, 255, 255, 0.06);

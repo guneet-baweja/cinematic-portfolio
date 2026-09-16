@@ -14,6 +14,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
 }
 
 .video-project__poster {
@@ -121,6 +122,8 @@
   opacity: 0;
   transform: translateY(8px);
   transition: all 0.25s ease;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .video-project:hover .video-project__center-action {

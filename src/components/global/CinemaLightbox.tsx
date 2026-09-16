@@ -221,6 +221,16 @@ export function CinemaLightbox({ isOpen, project, onClose }: CinemaLightboxProps
           </div>
 
           <div className="cinema-lightbox__top-actions">
+            <a
+              href={project.video}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cinema-lightbox__direct-btn"
+              title="Open video file directly in new tab"
+            >
+              <span>DIRECT LINK</span>
+              <span className="cinema-lightbox__arrow">↗</span>
+            </a>
             <button
               type="button"
               className="cinema-lightbox__btn cinema-lightbox__fullscreen-top-btn"
@@ -258,6 +268,22 @@ export function CinemaLightbox({ isOpen, project, onClose }: CinemaLightboxProps
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
           />
+
+          {/* Prominent Floating Unmute Pill when muted */}
+          {isMuted && (
+            <button
+              type="button"
+              className="cinema-lightbox__floating-unmute"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleMute();
+              }}
+              aria-label="Unmute Audio"
+            >
+              <span className="cinema-lightbox__unmute-icon">🔊</span>
+              <span>TAP FOR SOUND</span>
+            </button>
+          )}
 
           {/* Large Center Play State Animation */}
           {!isPlaying && (

@@ -104,25 +104,25 @@ const CAMERA_KEYS: CameraPoseKey[] = [
   // 8. Exiting neural nerve plexus, arriving at dark heart cavern (Heart beating directly ahead at Z: -34)
   { p: 0.52, x: 0.065, y: -16.00, z: -29.50, lookX: 0.065, lookY: -16.00, lookZ: -34.0, fov: 50 },
   // 9. Smooth Heart Approach: Beating heart looms massive ahead ("EVERY CUT IS MADE WITH HEART.")
-  { p: 0.56, x: 0.265, y: -16.00, z: -31.50, lookX: 0.065, lookY: -16.00, lookZ: -35.0, fov: 48 },
+  { p: 0.55, x: 0.150, y: -16.00, z: -32.00, lookX: 0.065, lookY: -16.00, lookZ: -35.0, fov: 48 },
   // 10. Smooth Heart Skirt: Orbiting past lateral heart ventricle & ascending aorta
-  { p: 0.59, x: 1.150, y: -15.80, z: -34.50, lookX: 0.265, lookY: -16.00, lookZ: -39.0, fov: 46 },
+  { p: 0.58, x: 0.220, y: -16.00, z: -35.00, lookX: 0.100, lookY: -16.00, lookZ: -39.0, fov: 46 },
   // 11. Gliding through aortic root / valve exit into bloodstream corridor
-  { p: 0.62, x: 0.350, y: -16.00, z: -38.50, lookX: 0.000, lookY: -16.00, lookZ: -43.0, fov: 45 },
+  { p: 0.61, x: 0.050, y: -16.00, z: -38.50, lookX: 0.000, lookY: -16.00, lookZ: -43.0, fov: 45 },
   // 12. Bloodstream Gallery - Encounter 1: PREMIERE PRO (Z: -43.0)
-  { p: 0.65, x: -0.250, y: -16.00, z: -41.50, lookX: -0.700, lookY: -16.00, lookZ: -43.0, fov: 44 },
+  { p: 0.65, x: 0.000, y: -16.00, z: -43.00, lookX: 0.000, lookY: -16.00, lookZ: -49.0, fov: 45 },
   // 13. Bloodstream Gallery - Encounter 2: DAVINCI RESOLVE (Z: -49.0)
-  { p: 0.69, x: 0.350, y: -16.00, z: -47.50, lookX: 0.700, lookY: -16.00, lookZ: -49.0, fov: 44 },
+  { p: 0.69, x: 0.000, y: -16.00, z: -49.00, lookX: 0.000, lookY: -16.00, lookZ: -55.0, fov: 45 },
   // 14. Bloodstream Gallery - Encounter 3: BLENDER 3D (Z: -55.0)
-  { p: 0.73, x: -0.220, y: -16.00, z: -53.50, lookX: -0.650, lookY: -16.00, lookZ: -55.0, fov: 44 },
+  { p: 0.73, x: 0.000, y: -16.00, z: -55.00, lookX: 0.000, lookY: -16.00, lookZ: -61.0, fov: 45 },
   // 15. Bloodstream Gallery - Encounter 4: HOUDINI FX (Z: -61.0)
-  { p: 0.77, x: 0.320, y: -16.00, z: -59.50, lookX: 0.700, lookY: -16.00, lookZ: -61.0, fov: 44 },
+  { p: 0.77, x: 0.000, y: -16.00, z: -61.00, lookX: 0.000, lookY: -16.00, lookZ: -67.0, fov: 45 },
   // 16. Encounter 5: AFTER EFFECTS CLIMAX BADGE (Z: -67.0) (Monolith text towering ahead in distance at Z: -80)
-  { p: 0.8100, x: 0.265, y: -16.00, z: -65.50, lookX: 0.265, lookY: -16.00, lookZ: -80.0, fov: 45 },
+  { p: 0.8100, x: 0.000, y: -16.00, z: -67.00, lookX: 0.050, lookY: -16.00, lookZ: -80.0, fov: 45 },
   // 17. The Monolith Corridor: Gliding towards "AFTER EFFECTS IS IN MY BLOOD." (Gradual distance approach)
-  { p: 0.8463, x: 0.265, y: -16.00, z: -72.00, lookX: 0.265, lookY: -16.00, lookZ: -80.0, fov: 45 },
+  { p: 0.8500, x: 0.120, y: -16.00, z: -74.00, lookX: 0.150, lookY: -16.00, lookZ: -80.0, fov: 45 },
   // 18. The Monolith Corridor: Text looms massive ahead in arterial space
-  { p: 0.8739, x: 0.265, y: -16.00, z: -77.50, lookX: 0.265, lookY: -16.00, lookZ: -80.0, fov: 45 },
+  { p: 0.8750, x: 0.200, y: -16.00, z: -78.00, lookX: 0.220, lookY: -16.00, lookZ: -80.0, fov: 45 },
   // 19. The Monolith Fly-Through: Passing between colossal letters (Watch dial resolving in distance at Z: -94)
   { p: 0.8929, x: 0.265, y: -16.00, z: -81.50, lookX: 0.265, lookY: -16.00, lookZ: -94.0, fov: 45 },
   // 20. STAGE 1: Gliding towards Luxury Watch Exterior Dial (Z: -94)
@@ -2854,7 +2854,7 @@ const BLOODSTREAM_LOGOS: BloodstreamLogoItem[] = [
     name: "Premiere Pro",
     tag: "NLE TIMELINE ARCHITECTURE // 64-BIT PRECISION",
     url: "/images/logos/premiere.png",
-    position: [-1.35, -16.0, -43.0],
+    position: [0.0, -16.0, -43.0],
     scale: [2.8, 2.8],
     color: "#9999ff",
     accent: "#e0d0ff",
@@ -2864,7 +2864,7 @@ const BLOODSTREAM_LOGOS: BloodstreamLogoItem[] = [
     name: "DaVinci Resolve",
     tag: "COLOR SCIENCE // 32-BIT FLOAT YRGB NODAL ENGINE",
     url: "/images/logos/davinci.png",
-    position: [1.35, -16.0, -49.0],
+    position: [0.0, -16.0, -49.0],
     scale: [2.8, 2.8],
     color: "#ff5533",
     accent: "#ffaa33",
@@ -2874,7 +2874,7 @@ const BLOODSTREAM_LOGOS: BloodstreamLogoItem[] = [
     name: "Blender 3D",
     tag: "SPATIAL SYNTHESIS // PROCEDURAL GEOMETRY NODES",
     url: "/images/logos/blender.png",
-    position: [-1.30, -16.0, -55.0],
+    position: [0.0, -16.0, -55.0],
     scale: [2.8, 2.8],
     color: "#ff8800",
     accent: "#44ddff",
@@ -2884,7 +2884,7 @@ const BLOODSTREAM_LOGOS: BloodstreamLogoItem[] = [
     name: "Houdini FX",
     tag: "PROCEDURAL DYNAMICS // PARTICLE & VOXEL SIMULATION",
     url: "/images/logos/houdini.png",
-    position: [1.35, -16.0, -61.0],
+    position: [0.0, -16.0, -61.0],
     scale: [2.8, 2.8],
     color: "#ff6600",
     accent: "#ffd040",
@@ -2894,7 +2894,7 @@ const BLOODSTREAM_LOGOS: BloodstreamLogoItem[] = [
     name: "After Effects",
     tag: "MOTION DESIGN SYSTEM // COMPOSITING & KINETIC LOGIC",
     url: "/images/logos/aftereffects.png",
-    position: [0.265, -16.00, -67.0],
+    position: [0.0, -16.00, -67.0],
     scale: [3.4, 3.4],
     color: "#d29bff",
     accent: "#ffffff",
@@ -2906,13 +2906,13 @@ const BLOODSTREAM_LOGOS: BloodstreamLogoItem[] = [
 function ArteryCorridorTunnel({ time }: { time: number }) {
   const tunnelGeo = useMemo(() => {
     const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0.265, -16.0, -33.2),
-      new THREE.Vector3(-0.25, -16.0, -43.0),
-      new THREE.Vector3(0.30, -16.0, -50.0),
-      new THREE.Vector3(-0.20, -16.0, -57.0),
-      new THREE.Vector3(0.25, -16.0, -64.0),
-      new THREE.Vector3(0.265, -16.0, -71.0),
-      new THREE.Vector3(0.265, -16.0, -78.0),
+      new THREE.Vector3(0.20, -16.0, -33.2),
+      new THREE.Vector3(0.00, -16.0, -43.0),
+      new THREE.Vector3(0.00, -16.0, -50.0),
+      new THREE.Vector3(0.00, -16.0, -57.0),
+      new THREE.Vector3(0.00, -16.0, -64.0),
+      new THREE.Vector3(0.05, -16.0, -71.0),
+      new THREE.Vector3(0.18, -16.0, -78.0),
       new THREE.Vector3(0.265, -16.0, -88.0),
     ]);
     return new THREE.TubeGeometry(curve, 110, 8.2, 24, false);
@@ -3259,13 +3259,9 @@ function HighFidelityLogoBadge({
         ? -0.22
         : 0;
 
-  // Calibrated scale & positioning ensuring 100% visibility on Samsung Galaxy S23 & narrow portrait screens
-  const baseBadgeScale = isMobilePortrait ? 0.22 : isNarrow ? 0.45 : 1.0;
-  const posX = isMobilePortrait
-    ? 0.0
-    : isNarrow
-      ? item.position[0] * 0.55
-      : item.position[0];
+  // Calibrated scale & positioning ensuring 100% visibility on Samsung Galaxy S23 & desktop
+  const baseBadgeScale = isMobilePortrait ? 0.26 : isNarrow ? 0.42 : 0.65;
+  const posX = 0.0;
 
   const groupRef = useRef<THREE.Group>(null);
 
@@ -3275,18 +3271,41 @@ function HighFidelityLogoBadge({
     const itemZ = item.position[2];
     const distZ = camZ - itemZ;
 
-    if (distZ <= 1.0) {
-      // Camera reached proximity threshold: hide cleanly so it never clips camera lens
+    if (distZ <= 0.3) {
+      // Camera passed through the emblem: hide cleanly
       groupRef.current.visible = false;
-    } else if (distZ < 2.4) {
+    } else if (distZ < 1.8) {
       groupRef.current.visible = true;
-      const progress = Math.max(0, (distZ - 1.0) / 1.4); // 0.0 to 1.0
-      // Elegantly scale down and dissolve into the vascular flow as camera approaches
-      const dynamicScale = baseBadgeScale * (0.15 + 0.85 * progress);
+      // Smooth holographic dissolve as camera passes through
+      const alpha = Math.max(0, Math.min(1, (distZ - 0.3) / 1.5));
+      // Subtle outward expansion as entering a light portal
+      const dynamicScale = baseBadgeScale * (1.0 + (1.0 - alpha) * 0.18);
       groupRef.current.scale.setScalar(dynamicScale);
+
+      // Smoothly fade all materials
+      groupRef.current.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mat = (child as THREE.Mesh).material as any;
+          if (mat) {
+            mat.transparent = true;
+            if (child.userData.baseOp === undefined) {
+              child.userData.baseOp = mat.opacity !== undefined ? mat.opacity : 1.0;
+            }
+            mat.opacity = child.userData.baseOp * alpha;
+          }
+        }
+      });
     } else {
       groupRef.current.visible = true;
       groupRef.current.scale.setScalar(baseBadgeScale);
+      groupRef.current.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mat = (child as THREE.Mesh).material as any;
+          if (mat && child.userData.baseOp !== undefined) {
+            mat.opacity = child.userData.baseOp;
+          }
+        }
+      });
     }
   });
 
@@ -3781,12 +3800,13 @@ function SceneContent({ scrollRef, onBreachComplete, onProgressTick }: SceneCont
           targetFov += (aspectComp - 1.0) * 11.5 * blend;
         }
 
-        // 2. Software Bloodstream Gallery (p: 0.62 -> 0.82):
-        // Center camera along central corridor so Premiere, DaVinci, Blender, Houdini are 100% dead center
-        if (p >= 0.62 && p <= 0.82) {
-          targetFov += 8.0;
-          targetX = 0.0;
-          targetLookX = 0.0;
+        // 2. Software Bloodstream Gallery (p: 0.58 -> 0.86):
+        // Smooth Hermite FOV expansion for portrait aspect framing (0 jump)
+        if (p >= 0.58 && p <= 0.86) {
+          const tIn = Math.min(1.0, Math.max(0.0, (p - 0.58) / 0.05));
+          const tOut = Math.min(1.0, Math.max(0.0, (0.86 - p) / 0.05));
+          const blend = (tIn * tIn * (3.0 - 2.0 * tIn)) * (tOut * tOut * (3.0 - 2.0 * tOut));
+          targetFov += 8.0 * blend;
         }
       }
 

@@ -66,7 +66,14 @@ export function ProjectScene({
           <span className="eyebrow">
             {String(index + 1).padStart(2, "0")} — {project.category}
           </span>
-          <h3>{project.title}</h3>
+          <h3
+            onClick={() => onOpenCinema?.(project)}
+            className="project-scene__clickable-title"
+            title="Open in Cinema Lightbox"
+          >
+            {project.title}
+            <span className="project-scene__title-arrow">↗</span>
+          </h3>
           <p>{project.description}</p>
           <dl className="project-scene__facts">
             <div>
@@ -86,6 +93,32 @@ export function ProjectScene({
               <dd>{project.software.join(", ")}</dd>
             </div>
           </dl>
+
+          {/* Interactive Project Actions */}
+          <div className="project-scene__actions">
+            <button
+              type="button"
+              className="project-scene__action-btn is-cinema"
+              onClick={() => onOpenCinema?.(project)}
+              title="Open full cinema theater view with audio"
+            >
+              <span className="project-scene__action-icon">▶</span>
+              <span>WATCH FILM [CINEMA VIEW]</span>
+            </button>
+
+            <a
+              href={project.video}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-scene__action-btn is-direct"
+              title="Open direct video file in new tab"
+            >
+              <span>DIRECT LINK</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </article>
