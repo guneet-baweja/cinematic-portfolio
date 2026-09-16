@@ -49,7 +49,6 @@ export function NarrativeOverlay({ onOpenWork }: { onOpenWork: () => void }) {
 
   const lastActRef = useRef(-1);
   const lastPhaseRef = useRef(-1);
-  const workOpenedRef = useRef(false);
 
   useGSAP(
     () => {
@@ -59,16 +58,6 @@ export function NarrativeOverlay({ onOpenWork }: { onOpenWork: () => void }) {
       const loop = () => {
         const act = scrollState.act;
         const actP = scrollState.actProgress;
-
-        // Auto-open Work Vault directly as the film tunnel culminates (p >= 0.88)
-        if (actP >= 0.88) {
-          if (!workOpenedRef.current) {
-            workOpenedRef.current = true;
-            onOpenWork();
-          }
-        } else if (actP < 0.80) {
-          workOpenedRef.current = false;
-        }
 
         const currentNarrative = NARRATIVES[3];
         const phases = currentNarrative.phases;

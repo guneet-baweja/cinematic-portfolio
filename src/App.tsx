@@ -9,7 +9,7 @@ import { Loader, FilmGrain, CustomCursor, ErrorBoundary } from "./components/glo
 // Narrative & HUD Instruments
 import { NarrativeOverlay, WorkVaultModal } from "./components/narrative";
 import { GenesisOverlay } from "./components/narrative/GenesisOverlay";
-import { getIsGenesisActive, skipGenesis, addFrameListener, removeFrameListener } from "./lib/lenis";
+import { getGenesisHeight, getIsGenesisActive, skipGenesis, addFrameListener, removeFrameListener } from "./lib/lenis";
 import { AnatomyIntroScene } from "./components/canvas/AnatomyIntroScene";
 
 // WebGL Continuous Canvas Scene
@@ -18,8 +18,20 @@ const SceneCanvas = lazy(() =>
 );
 
 
+import {
+  Portfolio,
+  BeforeAfterSlider,
+  TechDiagram,
+  WhatIDo,
+  Process,
+  Services,
+  CTA,
+  Contact,
+  Footer,
+} from "./components/sections";
+
 function AppContent() {
-  const { reducedMotion } = useMotionContext();
+  const { reducedMotion, isMobile } = useMotionContext();
   const [loaded, setLoaded] = useState(false);
   const [isWorkOpen, setIsWorkOpen] = useState(false);
   const [isGenesis, setIsGenesis] = useState(true);
@@ -46,6 +58,9 @@ function AppContent() {
     requestAnimationFrame(() => ScrollTrigger.refresh());
   };
 
+  const gHeight = getGenesisHeight();
+  const tHeight = typeof window !== "undefined" && (window.innerWidth < 768 || isMobile) ? 3000 : 4800;
+
   return (
     <>
       {/* Intro loader during initial asset initialization */}
@@ -55,11 +70,8 @@ function AppContent() {
       <FilmGrain />
       <CustomCursor />
 
-
-
       {/* 3D WebGL Anatomy Intro Scene: True 3D Head & Physical Eye Dive */}
       <AnatomyIntroScene />
-
 
       {/* Continuous 3D WebGL Canvas Layer */}
       <ErrorBoundary name="SceneCanvasRoot">
@@ -68,8 +80,7 @@ function AppContent() {
         </Suspense>
       </ErrorBoundary>
 
-
-      {/* Act G: Genesis Prologue Narrative & HUD Overlay (Disabled conflicting copy in favor of AnatomyIntroScene typography) */}
+      {/* Act G: Genesis Prologue Narrative & HUD Overlay */}
       <GenesisOverlay active={false} onSkip={skipGenesis} />
 
       {/* Narrative Typography & Act Voice Line Overlay: ONLY visible when Genesis is complete */}
@@ -88,27 +99,51 @@ function AppContent() {
       {/* Work Vault Modal: All 9 Projects, Comparison Slider & Cinema Player */}
       <WorkVaultModal isOpen={isWorkOpen} onClose={() => setIsWorkOpen(false)} />
 
-      {/* Unified 7500px Genesis Prologue Scroll Track (Matches AnatomyIntroScene & Lenis exactly) */}
+      {/* Responsive Genesis Prologue Scroll Track (Matches AnatomyIntroScene & Lenis exactly) */}
       <div
         className="genesis-scroll-track"
         style={{
           position: "relative",
           width: "100%",
-          height: "7500px",
+          height: `${gHeight}px`,
           pointerEvents: "none",
         }}
       />
 
-      {/* Pinned 5200px Act 03 Temporal Track: Continuous Film Tunnel into Grand Cinema & Work Showcase (Zero Dead Space) */}
+      {/* Act 03 Temporal Track: Continuous Film Tunnel into Grand Cinema & Work Showcase */}
       <div
         className="temporal-scroll-track"
         style={{
           position: "relative",
           width: "100%",
-          height: "5200px",
+          height: `${tHeight}px`,
           pointerEvents: "none",
         }}
       />
+
+      {/* Main Interactive Portfolio Document Flow (Seamless continuous scroll on all devices) */}
+      <main
+        id="main-portfolio"
+        style={{
+          position: "relative",
+          zIndex: 60,
+          background: "linear-gradient(180deg, #050608 0%, #0b0b0b 300px)",
+          color: "#ffffff",
+          width: "100%",
+          minHeight: "100vh",
+          boxShadow: "0 -24px 80px rgba(0, 0, 0, 0.95)",
+        }}
+      >
+        <Portfolio />
+        <BeforeAfterSlider />
+        <TechDiagram />
+        <WhatIDo />
+        <Process />
+        <Services />
+        <CTA />
+        <Contact />
+        <Footer />
+      </main>
     </>
   );
 }

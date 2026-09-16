@@ -1,0 +1,12 @@
+.git
+node_modules
+dist
+dist-ssr
+scratch
+videos-raw-backup
+media-cdn
+*.zip
+.agents
+CINEMATIC_WEB_SKILLS
+reconstruction
+.DS_Store

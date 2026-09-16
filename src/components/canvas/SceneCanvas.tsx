@@ -366,7 +366,8 @@ export function SceneCanvas() {
     return null;
   }
 
-  const shouldDowngrade = lite || isMobile;
+  const isMobileDevice = isMobile || (typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window));
+  const shouldDowngrade = lite || isMobileDevice;
 
   return (
     <div
@@ -382,7 +383,7 @@ export function SceneCanvas() {
       <ErrorBoundary name="SceneCanvas">
         <Canvas
           frameloop={isGenesis ? "never" : "always"}
-          dpr={shouldDowngrade ? [1, 1.2] : [1, 1.8]}
+          dpr={shouldDowngrade ? [1, 1.1] : [1, 1.75]}
           camera={{ position: [0, 0, 6], fov: 45 }}
           gl={{
             antialias: !shouldDowngrade,

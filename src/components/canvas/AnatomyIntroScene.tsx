@@ -4108,6 +4108,8 @@ export function AnatomyIntroScene({
     }
   }, [externalProgress]);
 
+  const isMobile = typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window);
+
   // Authoritative handoff: Genesis dissolves cleanly into Act 01 at 6000px / terminal progress
   const isPastIntro = !isGenesisActive;
 
@@ -4128,49 +4130,58 @@ export function AnatomyIntroScene({
         visibility: isPastIntro ? "hidden" : "visible",
       }}
     >
-      {/* PURE CINEMATIC WEBGL CANVAS */}
+      {/* PURE CINEMATIC WEBGL CANVAS - 120 FPS OPTIMIZED */}
       <Canvas
         frameloop={renderLoopActive ? "always" : "never"}
         className="anatomy-webgl-canvas"
         camera={{ position: [0, 0, 4.35], fov: 45 }}
         gl={{
-          antialias: true,
+          antialias: !isMobile,
           powerPreference: "high-performance",
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.15,
         }}
-        dpr={[1, 2]}
+        dpr={isMobile ? [1, 1.1] : [1, 1.75]}
       >
         <SceneContent
           scrollRef={scrollProgressRef}
           onBreachComplete={onBreachComplete}
           onProgressTick={updateDomTypography}
         />
-        {/* Procedural HDR Studio Environment for High-Luster PBR Metal Reflections */}
-        <Environment resolution={256}>
-          {/* Warm Amber/Gold Studio Softbox (Top-Left Key) */}
-          <mesh position={[-6, 7, 4]} scale={[8, 10, 1]}>
-            <planeGeometry />
-            <meshBasicMaterial color="#fef08a" />
-          </mesh>
-          {/* Crisp High-Contrast Overhead Glare Strip */}
-          <mesh position={[0, 9, 0]} scale={[12, 3, 1]} rotation={[Math.PI / 2, 0, 0]}>
-            <planeGeometry />
-            <meshBasicMaterial color="#ffffff" />
-          </mesh>
-          {/* Cool Steel/Cyan Specular Rim Strip (Right-Bottom) */}
-          <mesh position={[7, -5, -3]} scale={[6, 8, 1]}>
-            <planeGeometry />
-            <meshBasicMaterial color="#93c5fd" />
-          </mesh>
-          {/* Warm Secondary Fill (Front-Right) */}
-          <mesh position={[5, 4, 6]} scale={[6, 6, 1]}>
-            <planeGeometry />
-            <meshBasicMaterial color="#fde68a" />
-          </mesh>
-        </Environment>
-        {/* Phase 3 & 4 Macro Depth of Field Postprocessing */}
-        <CinematicPostProcessing scrollRef={scrollProgressRef} />
+        {/* Environment reflections for desktop; lightweight three-point direct lighting for mobile 120 FPS */}
+        {!isMobile ? (
+          <Environment resolution={256}>
+            {/* Warm Amber/Gold Studio Softbox (Top-Left Key) */}
+            <mesh position={[-6, 7, 4]} scale={[8, 10, 1]}>
+              <planeGeometry />
+              <meshBasicMaterial color="#fef08a" />
+            </mesh>
+            {/* Crisp High-Contrast Overhead Glare Strip */}
+            <mesh position={[0, 9, 0]} scale={[12, 3, 1]} rotation={[Math.PI / 2, 0, 0]}>
+              <planeGeometry />
+              <meshBasicMaterial color="#ffffff" />
+            </mesh>
+            {/* Cool Steel/Cyan Specular Rim Strip (Right-Bottom) */}
+            <mesh position={[7, -5, -3]} scale={[6, 8, 1]}>
+              <planeGeometry />
+              <meshBasicMaterial color="#93c5fd" />
+            </mesh>
+            {/* Warm Secondary Fill (Front-Right) */}
+            <mesh position={[5, 4, 6]} scale={[6, 6, 1]}>
+              <planeGeometry />
+              <meshBasicMaterial color="#fde68a" />
+            </mesh>
+          </Environment>
+        ) : (
+          <>
+            <directionalLight position={[-6, 7, 4]} intensity={1.8} color="#fef08a" />
+            <directionalLight position={[0, 9, 0]} intensity={2.2} color="#ffffff" />
+            <directionalLight position={[7, -5, -3]} intensity={1.5} color="#93c5fd" />
+            <ambientLight intensity={0.6} />
+          </>
+        )}
+        {/* Depth of Field Postprocessing: active on desktop, bypassed on mobile for steady 120 FPS */}
+        {!isMobile && <CinematicPostProcessing scrollRef={scrollProgressRef} />}
       </Canvas>
 
       {/* DOM TYPOGRAPHY OVERLAY: Phase 2 Brain Core Split */}

@@ -11,8 +11,12 @@ export type FrameListener = (time: number, deltaTime: number) => void;
 const frameListeners = new Set<FrameListener>();
 
 export const GENESIS_HEIGHT = 7500;
+export const GENESIS_HEIGHT_MOBILE = 3800;
 
 export function getGenesisHeight(): number {
+  if (typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window)) {
+    return GENESIS_HEIGHT_MOBILE;
+  }
   return GENESIS_HEIGHT;
 }
 
@@ -91,19 +95,18 @@ export function initLenis(reducedMotion: boolean) {
     return null;
   }
 
-  // UNIFORM 120 FPS CONSISTENT SCROLL ENGINE
-  // - duration: 1.0 (immediate, zero lag, consistent glide)
-  // - exponential ease-out: settles deliberately and responsively
-  // - wheelMultiplier: 1.0 for consistent 1:1 tactile pacing across mouse wheels and trackpads
-  // - touchMultiplier: 1.5
+  // UNIFORM 120 FPS CONSISTENT SCROLL ENGINE FOR MOBILE & DESKTOP
+  const isMobile = typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window);
+
   lenis = new Lenis({
-    duration: 1.0,
+    duration: isMobile ? 0.85 : 1.0,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
     orientation: "vertical",
     gestureOrientation: "vertical",
     smoothWheel: true,
     wheelMultiplier: 1.0,
-    touchMultiplier: 1.5,
+    touchMultiplier: isMobile ? 1.15 : 1.5,
+    syncTouch: false,
   });
 
   if (typeof window !== "undefined") {
@@ -147,12 +150,6 @@ export function initLenis(reducedMotion: boolean) {
 
   // SINGLE COHERENT ANIMATION LOOP:
   // GSAP's ticker is the sole master heartbeat owner.
-  // Order of execution:
-  // 1. Lenis computes smooth scroll interpolation
-  // 2. ScrollTrigger updates
-  // 3. Continuous frame-rate-independent physics tick (Phase 6 Engine)
-  // 4. Audio engine sync
-  // 5. Synchronously notify registered frame listeners
   tickerFn = (time: number, deltaTime: number) => {
     if (lenis) {
       // 1. Advance Lenis physics (ms)
@@ -172,9 +169,10 @@ export function initLenis(reducedMotion: boolean) {
   };
 
   gsap.ticker.add(tickerFn);
-  gsap.ticker.lagSmoothing(0); // Zero lag smoothing to prevent visual jumps on frame drops
+  // Lag smoothing (500ms max, 33ms target) absorbs frame drops on 120Hz/ProMotion displays without micro-stutter
+  gsap.ticker.lagSmoothing(500, 33);
 
-  ScrollTrigger.defaults({ scrub: true }); // Direct 1:1 scrub, zero secondary damping
+  ScrollTrigger.defaults({ scrub: true });
 
   return lenis;
 }
