@@ -19,6 +19,13 @@ interface TunnelInstanceData {
  * - Extended view horizon & smooth near-plane fading so the scene is always rich and alive.
  * - 120 FPS optimized with zero allocations in useFrame.
  */
+// Reusable singleton geometries to eliminate per-render allocations and GPU buffer churn
+const TORUS_RING_GEO = new THREE.TorusGeometry(1, 0.018, 8, 32);
+const CELLULOID_BOX_GEO = new THREE.BoxGeometry(2.2, 1.3, 0.08);
+const CELLULOID_BORDER_GEO = new THREE.BoxGeometry(2.24, 1.34, 0.1);
+const HERO_PLANE_GEO = new THREE.PlaneGeometry(1, 1);
+const HERO_EDGES_GEO = new THREE.EdgesGeometry(HERO_PLANE_GEO);
+
 export function Act08Tunnel({
   active,
   isMobile,
@@ -36,8 +43,9 @@ export function Act08Tunnel({
   const mobileCheck =
     isMobile ??
     (size.width < 768 || (typeof window !== "undefined" && window.innerWidth < 768));
-  const INSTANCE_COUNT = mobileCheck ? 150 : 320;
-  const RING_COUNT = mobileCheck ? 28 : 50;
+  // Optimized instance counts: 140 on desktop, 60 on mobile for 120 FPS fluid motion
+  const INSTANCE_COUNT = mobileCheck ? 60 : 140;
+  const RING_COUNT = mobileCheck ? 16 : 28;
 
   // 1. Precalculate 3 Interwoven Helical Film Strip Streams along Z-axis
   const instances = useMemo<TunnelInstanceData[]>(() => {
@@ -143,7 +151,7 @@ export function Act08Tunnel({
     if (!groupRef.current) return;
 
     const isAct3 = scrollState.act === 3;
-    if (!isAct3) {
+    if (!isAct3 || !active) {
       groupRef.current.visible = false;
       return;
     }
@@ -259,7 +267,7 @@ export function Act08Tunnel({
       <instancedMesh
         key={`rings-${RING_COUNT}`}
         ref={ringsMeshRef}
-        args={[new THREE.TorusGeometry(1, 0.018, 8, 36), undefined as any, RING_COUNT]}
+        args={[TORUS_RING_GEO, undefined as any, RING_COUNT]}
       >
         <meshBasicMaterial transparent opacity={0.45} />
       </instancedMesh>
@@ -268,7 +276,7 @@ export function Act08Tunnel({
       <instancedMesh
         key={`frames-${INSTANCE_COUNT}`}
         ref={framesMeshRef}
-        args={[new THREE.BoxGeometry(2.2, 1.3, 0.08), undefined as any, INSTANCE_COUNT]}
+        args={[CELLULOID_BOX_GEO, undefined as any, INSTANCE_COUNT]}
       >
         <meshStandardMaterial
           roughness={0.15}
@@ -284,7 +292,7 @@ export function Act08Tunnel({
       <instancedMesh
         key={`borders-${INSTANCE_COUNT}`}
         ref={bordersMeshRef}
-        args={[new THREE.BoxGeometry(2.24, 1.34, 0.1), undefined as any, INSTANCE_COUNT]}
+        args={[CELLULOID_BORDER_GEO, undefined as any, INSTANCE_COUNT]}
       >
         <meshStandardMaterial
           color="#FF5F1F"
@@ -298,12 +306,10 @@ export function Act08Tunnel({
 
       {/* 4. Grand Arrival Climax Portal */}
       <group ref={finalHeroFrameRef} visible={false}>
-        <mesh>
-          <planeGeometry args={[1, 1]} />
+        <mesh geometry={HERO_PLANE_GEO}>
           <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
         </mesh>
-        <lineSegments>
-          <edgesGeometry args={[new THREE.PlaneGeometry(1, 1)]} />
+        <lineSegments geometry={HERO_EDGES_GEO}>
           <lineBasicMaterial color="#FF5F1F" transparent opacity={0.9} linewidth={2} />
         </lineSegments>
       </group>

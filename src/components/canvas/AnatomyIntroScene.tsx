@@ -35,6 +35,7 @@ const EYE_TARGET = {
 // Deep 3D S-curve spiral nerve tract from the brainstem medulla oblongata down
 // into the cardiac plexus and myocardial heart cavern.
 // ============================================================================
+// 1. Camera flight path spline (entering spinal canal at Z: -16.50)
 const CORKSCREW_SPLINE = new THREE.CatmullRomCurve3(
   [
     new THREE.Vector3(EYE_TARGET.x, EYE_TARGET.y, -16.50),   // 1. Brainstem medulla cleft base
@@ -45,6 +46,31 @@ const CORKSCREW_SPLINE = new THREE.CatmullRomCurve3(
     new THREE.Vector3(-1.800, -14.20, -26.20), // 6. Vagal cardiac descent
     new THREE.Vector3(-0.450, -15.60, -28.00), // 7. Curving toward cardiac gateway
     new THREE.Vector3(0.065, -16.00, -29.50),  // 8. Terminal cardiac plexus on anterior heart
+  ],
+  false,
+  "catmullrom",
+  0.5
+);
+
+// 2. Nerve conduit spline anchored directly into actual brainstem surface vertices (Z: -13.65)
+export const BRAINSTEM_ANCHORS = [
+  new THREE.Vector3(EYE_TARGET.x - 0.22, EYE_TARGET.y - 0.38, -13.55), // Left ventral peduncle
+  new THREE.Vector3(EYE_TARGET.x + 0.22, EYE_TARGET.y - 0.38, -13.55), // Right ventral peduncle
+  new THREE.Vector3(EYE_TARGET.x, EYE_TARGET.y - 0.48, -13.65),        // Central lower medulla oblongata
+];
+
+const NERVE_CONDUIT_SPLINE = new THREE.CatmullRomCurve3(
+  [
+    BRAINSTEM_ANCHORS[2],                                                 // 1. Rooted on lower ventral medulla surface (Z: -13.65)
+    new THREE.Vector3(EYE_TARGET.x + 0.12, EYE_TARGET.y - 0.32, -14.80), // 2. Medullary tract descending from brain
+    new THREE.Vector3(EYE_TARGET.x, EYE_TARGET.y, -16.50),               // 3. Spinal canal entry
+    new THREE.Vector3(1.750, -1.800, -17.80),                            // 4. Cervical nerve trunk banking right
+    new THREE.Vector3(2.400, -5.200, -19.50),                            // 5. Thoracic sympathetic trunk lateral sweep
+    new THREE.Vector3(1.100, -8.800, -21.80),                            // 6. Inward spiral crossing central spinal axis
+    new THREE.Vector3(-1.650, -11.80, -23.80),                           // 7. S-curve sweeping lateral left loop
+    new THREE.Vector3(-1.800, -14.20, -26.20),                           // 8. Vagal cardiac descent
+    new THREE.Vector3(-0.450, -15.60, -28.00),                           // 9. Curving toward cardiac gateway
+    new THREE.Vector3(0.065, -16.00, -29.50),                            // 10. Terminal cardiac plexus on anterior heart
   ],
   false,
   "catmullrom",
@@ -1463,32 +1489,32 @@ function HemisphereNeuralConvergence({ time }: { time: number }) {
     const geos: THREE.TubeGeometry[] = [];
     const hemis: number[] = [];
 
-    const brainstemEntry = new THREE.Vector3(EYE_TARGET.x, EYE_TARGET.y, -16.50);
+    const brainstemEntry = BRAINSTEM_ANCHORS[2];
 
     // A. Left Hemisphere Efferent Axons (sprouting from timeline rails, cyan logic)
     const numLeft = 10;
     for (let i = 0; i < numLeft; i++) {
-      const z0 = -11.5 - i * 0.45;
+      const z0 = -11.2 - i * 0.22;
       const p0 = new THREE.Vector3(
         EYE_TARGET.x - 1.85 + Math.sin(i * 1.7) * 0.45,
         EYE_TARGET.y + ((i % 4 - 1.5) * 0.55) + Math.cos(i * 2.3) * 0.15,
         z0
       );
       const p1 = new THREE.Vector3(
-        p0.x * 0.65 + brainstemEntry.x * 0.35 + Math.sin(i * 3.1) * 0.22,
-        p0.y * 0.65 + brainstemEntry.y * 0.35 + Math.cos(i * 1.9) * 0.18,
-        z0 - 1.6
+        p0.x * 0.65 + BRAINSTEM_ANCHORS[0].x * 0.35 + Math.sin(i * 3.1) * 0.18,
+        p0.y * 0.65 + BRAINSTEM_ANCHORS[0].y * 0.35 + Math.cos(i * 1.9) * 0.14,
+        z0 - 0.9
       );
       const p2 = new THREE.Vector3(
-        brainstemEntry.x - 0.22 + Math.sin(i * 2.5) * 0.18,
-        brainstemEntry.y + 0.15 + Math.cos(i * 2.1) * 0.18,
-        -15.6 - i * 0.08
+        BRAINSTEM_ANCHORS[0].x - 0.12 + Math.sin(i * 2.5) * 0.12,
+        BRAINSTEM_ANCHORS[0].y + 0.08 + Math.cos(i * 2.1) * 0.12,
+        -13.35 - i * 0.03
       );
-      const p3 = new THREE.Vector3(
-        brainstemEntry.x - 0.08 + Math.sin(i * 1.5) * 0.12,
-        brainstemEntry.y + 0.05 + Math.cos(i * 1.8) * 0.12,
-        -16.50
-      );
+      const p3 = BRAINSTEM_ANCHORS[0].clone().add(new THREE.Vector3(
+        Math.sin(i * 1.5) * 0.06,
+        Math.cos(i * 1.8) * 0.04,
+        -0.02
+      ));
 
       const curve = new THREE.CatmullRomCurve3([p0, p1, p2, p3], false, "catmullrom", 0.45);
       geos.push(new THREE.TubeGeometry(curve, 48, 0.045, 7, false));
@@ -1498,44 +1524,43 @@ function HemisphereNeuralConvergence({ time }: { time: number }) {
     // B. Right Hemisphere Afferent Axons (sprouting from creative particle nebula, warm gold)
     const numRight = 10;
     for (let i = 0; i < numRight; i++) {
-      const z0 = -11.5 - i * 0.45;
+      const z0 = -11.2 - i * 0.22;
       const p0 = new THREE.Vector3(
         EYE_TARGET.x + 1.85 + Math.cos(i * 2.1) * 0.55,
         EYE_TARGET.y + Math.sin(i * 1.6) * 0.85,
         z0
       );
       const p1 = new THREE.Vector3(
-        p0.x * 0.65 + brainstemEntry.x * 0.35 + Math.cos(i * 2.9) * 0.22,
-        p0.y * 0.65 + brainstemEntry.y * 0.35 + Math.sin(i * 2.3) * 0.18,
-        z0 - 1.6
+        p0.x * 0.65 + BRAINSTEM_ANCHORS[1].x * 0.35 + Math.cos(i * 2.9) * 0.18,
+        p0.y * 0.65 + BRAINSTEM_ANCHORS[1].y * 0.35 + Math.sin(i * 2.3) * 0.14,
+        z0 - 0.9
       );
       const p2 = new THREE.Vector3(
-        brainstemEntry.x + 0.22 + Math.cos(i * 3.3) * 0.18,
-        brainstemEntry.y + 0.15 + Math.sin(i * 2.7) * 0.18,
-        -15.6 - i * 0.08
+        BRAINSTEM_ANCHORS[1].x + 0.12 + Math.cos(i * 3.3) * 0.12,
+        BRAINSTEM_ANCHORS[1].y + 0.08 + Math.sin(i * 2.7) * 0.12,
+        -13.35 - i * 0.03
       );
-      const p3 = new THREE.Vector3(
-        brainstemEntry.x + 0.08 + Math.cos(i * 1.8) * 0.12,
-        brainstemEntry.y + 0.05 + Math.sin(i * 2.1) * 0.12,
-        -16.50
-      );
+      const p3 = BRAINSTEM_ANCHORS[1].clone().add(new THREE.Vector3(
+        Math.cos(i * 1.8) * 0.06,
+        Math.sin(i * 2.1) * 0.04,
+        -0.02
+      ));
 
       const curve = new THREE.CatmullRomCurve3([p0, p1, p2, p3], false, "catmullrom", 0.45);
       geos.push(new THREE.TubeGeometry(curve, 48, 0.045, 7, false));
       hemis.push(1.0); // Right
     }
 
-    // C. Pyramidal Decussation Cross-Over Axons (interweaving across midline)
+    // C. Pyramidal Decussation Cross-Over Axons (interweaving across midline into medulla)
     const numDecuss = 4;
     for (let d = 0; d < numDecuss; d++) {
       const isLeftToRight = d % 2 === 0;
-      const startX = isLeftToRight ? EYE_TARGET.x - 1.4 : EYE_TARGET.x + 1.4;
-      const endX = isLeftToRight ? EYE_TARGET.x + 0.2 : EYE_TARGET.x - 0.2;
-      const z0 = -13.2 - d * 0.7;
+      const startX = isLeftToRight ? EYE_TARGET.x - 1.2 : EYE_TARGET.x + 1.2;
+      const z0 = -12.4 - d * 0.3;
 
-      const p0 = new THREE.Vector3(startX, EYE_TARGET.y + 0.4 - d * 0.2, z0);
-      const pMid = new THREE.Vector3(EYE_TARGET.x, EYE_TARGET.y + 0.6 + (d % 2 === 0 ? 0.2 : -0.2), z0 - 1.2);
-      const pEnd = new THREE.Vector3(endX, EYE_TARGET.y + 0.1, -16.50);
+      const p0 = new THREE.Vector3(startX, EYE_TARGET.y + 0.3 - d * 0.15, z0);
+      const pMid = new THREE.Vector3(EYE_TARGET.x, EYE_TARGET.y + 0.45 + (d % 2 === 0 ? 0.12 : -0.12), z0 - 0.6);
+      const pEnd = brainstemEntry.clone().add(new THREE.Vector3((d % 2 === 0 ? 0.06 : -0.06), 0.04, 0));
 
       const curve = new THREE.CatmullRomCurve3([p0, pMid, pEnd], false, "catmullrom", 0.5);
       geos.push(new THREE.TubeGeometry(curve, 40, 0.038, 7, false));
@@ -1750,6 +1775,7 @@ const AxonFascicleShader = {
   uniforms: {
     uTime: { value: 0 },
     uCameraZ: { value: 4.35 },
+    uDrawProgress: { value: 0.0 },
     fogDensity: { value: 0.032 },
   },
   vertexShader: /* glsl */ `
@@ -1762,7 +1788,12 @@ const AxonFascicleShader = {
     void main() {
       vUv = uv;
       vNormal = normalize(normalMatrix * normal);
-      vec4 wp = modelMatrix * vec4(position, 1.0);
+
+      // Organic biological nerve taper: thicker at brainstem root (uv.x = 0), tapering toward distal terminal tips (uv.x = 1)
+      float taper = mix(0.045, -0.035, uv.x);
+      vec3 pos = position + normal * taper;
+
+      vec4 wp = modelMatrix * vec4(pos, 1.0);
       vWorldPos = wp.xyz;
       vec4 mvPosition = viewMatrix * wp;
       gl_Position = projectionMatrix * mvPosition;
@@ -1780,8 +1811,21 @@ const AxonFascicleShader = {
     varying float vFogFactor;
     uniform float uTime;
     uniform float uCameraZ;
+    uniform float uDrawProgress;
 
     void main() {
+      // Draw-on progress: reveal tube from root (vUv.x = 0.0) to tip (vUv.x = 1.0)
+      if (vUv.x > uDrawProgress) {
+        discard;
+      }
+
+      // Smooth growth front leading edge
+      float growthEdge = smoothstep(uDrawProgress, max(0.0, uDrawProgress - 0.035), vUv.x);
+
+      // Searing bioluminescent electrical spark front at the growing tip
+      float tipDist = abs(vUv.x - uDrawProgress);
+      float tipSpark = exp(-tipDist * 42.0) * step(0.001, uDrawProgress) * (1.0 - step(0.999, uDrawProgress));
+
       // Directional light for tubular 3D definition
       vec3 lightDir = normalize(vec3(0.4, 1.0, 0.7));
       float ndl = max(0.20, dot(vNormal, lightDir));
@@ -1811,6 +1855,7 @@ const AxonFascicleShader = {
       vec3 color = mix(cDeepNavy, vec3(0.03, 0.22, 0.65), ndl);
       color += cElectricCyan * (packet * 1.8 + fresnel * 0.95);
       color += cWhiteLightning * fastSpark * 2.2;
+      color += vec3(0.85, 0.98, 1.0) * tipSpark * 3.8;
       color += vec3(0.7, 0.9, 1.0) * spec * 0.6;
       color += cElectricCyan * railGroove * 0.25;
 
@@ -1822,7 +1867,7 @@ const AxonFascicleShader = {
       float tubeFade = smoothstep(0.0, 0.05, vUv.y) * smoothstep(1.0, 0.95, vUv.y);
       color *= (1.0 - vFogFactor) * conduitFade;
 
-      float alpha = clamp(0.85 + packet * 0.3 + fastSpark * 0.3, 0.0, 1.0) * tubeFade * conduitFade * (1.0 - vFogFactor);
+      float alpha = clamp(0.85 + packet * 0.3 + fastSpark * 0.3, 0.0, 1.0) * growthEdge * tubeFade * conduitFade * (1.0 - vFogFactor);
       gl_FragColor = vec4(color, alpha);
     }
   `,
@@ -1833,6 +1878,7 @@ const PerineuriumSheathShader = {
   uniforms: {
     uTime: { value: 0 },
     uCameraZ: { value: 4.35 },
+    uDrawProgress: { value: 0.0 },
     fogDensity: { value: 0.032 },
   },
   vertexShader: /* glsl */ `
@@ -1863,8 +1909,14 @@ const PerineuriumSheathShader = {
     varying float vFogFactor;
     uniform float uTime;
     uniform float uCameraZ;
+    uniform float uDrawProgress;
 
     void main() {
+      if (vUv.x > uDrawProgress) {
+        discard;
+      }
+      float growthEdge = smoothstep(uDrawProgress, max(0.0, uDrawProgress - 0.045), vUv.x);
+
       vec3 viewDir = normalize(-vWorldPos);
       float fresnel = pow(1.0 - max(0.0, dot(vNormal, viewDir)), 3.5);
 
@@ -1877,15 +1929,23 @@ const PerineuriumSheathShader = {
       float fadeOut = smoothstep(-34.0, -30.5, vWorldPos.z);
       float conduitFade = clamp(fadeIn * fadeOut, 0.0, 1.0);
 
-      float alpha = (0.08 + fresnel * 0.22 + membraneWave * 0.15) * conduitFade * (1.0 - vFogFactor);
+      float alpha = (0.08 + fresnel * 0.22 + membraneWave * 0.15) * growthEdge * conduitFade * (1.0 - vFogFactor);
       gl_FragColor = vec4(color * (1.0 - vFogFactor), alpha);
     }
   `,
 };
 
 // Synaptic Spark Particle Stream along the Neural Conduit
-function SynapticSparkParticles({ time }: { time: number }) {
-  const count = 220;
+// Re-timed: only ignites once tube growth reaches ~82-96%, offset from initial sprout
+function SynapticSparkParticles({
+  time,
+  drawProgress = 1.0,
+}: {
+  time: number;
+  drawProgress?: number;
+}) {
+  const isMobile = typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window);
+  const count = isMobile ? 65 : 220;
   const pointsRef = useRef<THREE.Points>(null);
 
   const [positions, offsets] = useMemo(() => {
@@ -1893,32 +1953,39 @@ function SynapticSparkParticles({ time }: { time: number }) {
     const offs = new Float32Array(count);
     for (let i = 0; i < count; i++) {
       offs[i] = i / count;
-      const pt = CORKSCREW_SPLINE.getPointAt(offs[i]).add(new THREE.Vector3(0, -0.55, 0));
+      const pt = NERVE_CONDUIT_SPLINE.getPointAt(offs[i]).add(new THREE.Vector3(0, -0.55, 0));
       pos[i * 3] = pt.x;
       pos[i * 3 + 1] = pt.y;
       pos[i * 3 + 2] = pt.z;
     }
     return [pos, offs];
-  }, []);
+  }, [count]);
 
   const pointMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
+        uDrawProgress: { value: 0.0 },
         fogDensity: { value: 0.032 },
       },
       vertexShader: /* glsl */ `
         uniform float uTime;
+        uniform float uDrawProgress;
         attribute float aOffset;
         varying float vAlpha;
 
         void main() {
+          // Gated ignition: zero emission until tube growth reaches ~82%
+          float igniteFactor = smoothstep(0.82, 0.96, uDrawProgress);
+          // Only particles along the grown portion of the spline activate
+          float pathActive = step(aOffset, uDrawProgress + 0.05);
+
           float t = fract(aOffset - uTime * 0.28);
-          vAlpha = sin(t * 3.14159);
+          vAlpha = sin(t * 3.14159) * igniteFactor * pathActive;
 
           vec4 mvPosition = viewMatrix * modelMatrix * vec4(position, 1.0);
           gl_Position = projectionMatrix * mvPosition;
-          gl_PointSize = (4.5 + sin(t * 12.0) * 2.0) * (20.0 / -mvPosition.z);
+          gl_PointSize = (4.5 + sin(t * 12.0) * 2.0) * (20.0 / -mvPosition.z) * igniteFactor;
         }
       `,
       fragmentShader: /* glsl */ `
@@ -1943,6 +2010,7 @@ function SynapticSparkParticles({ time }: { time: number }) {
   useFrame(() => {
     if (!pointsRef.current) return;
     pointMaterial.uniforms.uTime.value = time;
+    pointMaterial.uniforms.uDrawProgress.value = drawProgress;
   });
 
   return (
@@ -1956,14 +2024,20 @@ function SynapticSparkParticles({ time }: { time: number }) {
   );
 }
 
-function BiologicalNervePlexus({ time }: { time: number }) {
+function BiologicalNervePlexus({
+  time,
+  scrollRef,
+}: {
+  time: number;
+  scrollRef?: React.MutableRefObject<number>;
+}) {
   const { camera } = useThree();
   const gangliaRef = useRef<THREE.InstancedMesh>(null);
   const gangliaDummy = useMemo(() => new THREE.Object3D(), []);
 
-  // 1. Compute continuous, twist-free parallel transport frame along CORKSCREW_SPLINE
+  // 1. Compute continuous, twist-free parallel transport frame along NERVE_CONDUIT_SPLINE (rooted at Z: -13.65)
   const { points, normals } = useMemo(() => {
-    return computeBishopFrames(CORKSCREW_SPLINE, 120);
+    return computeBishopFrames(NERVE_CONDUIT_SPLINE, 140);
   }, []);
 
   // 2. Central Primary Cyber-Blue Core Conduit running slightly below camera
@@ -2002,25 +2076,24 @@ function BiologicalNervePlexus({ time }: { time: number }) {
     return geos;
   }, [points, normals]);
 
-  // 4. Cranial Brainstem Rootlets (Fila Radicularia) anchoring into medulla oblongata
+  // 4. Cranial Brainstem Rootlets (Fila Radicularia) anchoring directly into brainstem surface vertices
   const rootletGeometries = useMemo(() => {
     const geos: THREE.TubeGeometry[] = [];
     const numRootlets = 10;
-    const brainCenter = new THREE.Vector3(EYE_TARGET.x, EYE_TARGET.y, -16.50);
-    const trunkEntry = CORKSCREW_SPLINE.getPointAt(0.04);
+    const trunkEntry = NERVE_CONDUIT_SPLINE.getPointAt(0.12); // Z ~ -15.0
 
     for (let r = 0; r < numRootlets; r++) {
-      const theta = (r * Math.PI * 2) / numRootlets;
-      const spreadRad = 1.15 + 0.25 * Math.sin(r * 3.0);
-      const anchor = new THREE.Vector3(
-        brainCenter.x + Math.cos(theta) * spreadRad,
-        brainCenter.y + 0.35 + Math.sin(theta * 2.0) * 0.25,
-        brainCenter.z + Math.sin(theta) * spreadRad * 0.6 - 0.2
+      const anchor = BRAINSTEM_ANCHORS[r % BRAINSTEM_ANCHORS.length].clone().add(
+        new THREE.Vector3(
+          Math.sin(r * 2.1) * 0.12,
+          Math.cos(r * 1.7) * 0.08,
+          Math.sin(r * 3.4) * 0.10
+        )
       );
       const mid = anchor.clone().lerp(trunkEntry, 0.48).add(new THREE.Vector3(
-        Math.cos(theta) * 0.24,
-        -0.22,
-        0.12
+        Math.cos(r * 1.5) * 0.16,
+        -0.14,
+        0.08
       ));
       const c = new THREE.CatmullRomCurve3([anchor, mid, trunkEntry], false, "catmullrom", 0.5);
       geos.push(new THREE.TubeGeometry(c, 36, 0.075, 7, false));
@@ -2038,8 +2111,8 @@ function BiologicalNervePlexus({ time }: { time: number }) {
 
     for (let b = 0; b < branchU.length; b++) {
       const u = branchU[b];
-      const origin = CORKSCREW_SPLINE.getPointAt(u);
-      const tangent = CORKSCREW_SPLINE.getTangentAt(u).normalize();
+      const origin = NERVE_CONDUIT_SPLINE.getPointAt(u);
+      const tangent = NERVE_CONDUIT_SPLINE.getTangentAt(u).normalize();
       const dirPrimary = new THREE.Vector3(
         Math.cos(b * 2.4),
         Math.sin(b * 1.8) * 0.5,
@@ -2087,7 +2160,7 @@ function BiologicalNervePlexus({ time }: { time: number }) {
       new THREE.Vector3(-0.85, -15.60, -33.5), // Left atrial junction
     ];
 
-    const trunkExit = CORKSCREW_SPLINE.getPointAt(0.96);
+    const trunkExit = NERVE_CONDUIT_SPLINE.getPointAt(0.96);
     const geos: THREE.TubeGeometry[] = [];
 
     for (let c = 0; c < targets.length; c++) {
@@ -2105,7 +2178,7 @@ function BiologicalNervePlexus({ time }: { time: number }) {
 
   // 7. Outer Ethereal Cyan Aura Sheath (Sleek 0.75 radius, 0 overdraw stall)
   const sheathGeo = useMemo(() => {
-    return new THREE.TubeGeometry(CORKSCREW_SPLINE, 100, 0.75, 12, false);
+    return new THREE.TubeGeometry(NERVE_CONDUIT_SPLINE, 100, 0.75, 12, false);
   }, []);
 
   // 8. Materials
@@ -2114,6 +2187,7 @@ function BiologicalNervePlexus({ time }: { time: number }) {
       uniforms: {
         uTime: { value: 0 },
         uCameraZ: { value: 4.35 },
+        uDrawProgress: { value: 0.0 },
         fogDensity: { value: 0.032 },
       },
       vertexShader: AxonFascicleShader.vertexShader,
@@ -2130,6 +2204,7 @@ function BiologicalNervePlexus({ time }: { time: number }) {
       uniforms: {
         uTime: { value: 0 },
         uCameraZ: { value: 4.35 },
+        uDrawProgress: { value: 0.0 },
         fogDensity: { value: 0.032 },
       },
       vertexShader: PerineuriumSheathShader.vertexShader,
@@ -2199,24 +2274,46 @@ function BiologicalNervePlexus({ time }: { time: number }) {
     somaMaterial,
   ]);
 
+  // Live scroll-progress scrub value for organic draw-on reveal (p in [0.28, 0.40])
+  const currentDrawProgressRef = useRef(0.0);
+
   // Uniform updates in 120 FPS render loop
   useFrame(() => {
     const camZ = camera.position.z;
+    const p = scrollRef ? scrollRef.current : 0;
+
+    // Organic line-draw reveal: grows from brain surface (p = 0.28) down to heart (p = 0.40)
+    let drawP = 0.0;
+    if (p >= 0.28) {
+      drawP = Math.min(1.0, (p - 0.28) / (0.40 - 0.28));
+    }
+    currentDrawProgressRef.current = drawP;
+
     axonMaterial.uniforms.uTime.value = time;
     axonMaterial.uniforms.uCameraZ.value = camZ;
+    axonMaterial.uniforms.uDrawProgress.value = drawP;
+
     sheathMaterial.uniforms.uTime.value = time;
     sheathMaterial.uniforms.uCameraZ.value = camZ;
+    sheathMaterial.uniforms.uDrawProgress.value = drawP;
+
     somaMaterial.uniforms.uTime.value = time;
     somaMaterial.uniforms.uCameraZ.value = camZ;
 
-    // Ganglia subtle biological pulse
+    // Ganglia reveal dynamically synchronized with growing tube front
     if (gangliaRef.current) {
+      const branchU = [0.12, 0.22, 0.34, 0.46, 0.58, 0.70, 0.82, 0.92];
       arborGangliaPositions.forEach((pos, i) => {
         gangliaDummy.position.copy(pos);
-        const pulse = Math.sin(time * 3.5 + i * 1.8) * 0.02;
-        const scale = 0.16 + (i % 2 === 0 ? 0.04 : 0.02) + pulse;
-        gangliaDummy.scale.setScalar(scale);
-        gangliaDummy.rotation.y = time * 0.2 + i * 0.4;
+        const branchActive = drawP >= branchU[i];
+        if (branchActive) {
+          const pulse = Math.sin(time * 3.5 + i * 1.8) * 0.02;
+          const scale = 0.16 + (i % 2 === 0 ? 0.04 : 0.02) + pulse;
+          gangliaDummy.scale.setScalar(scale);
+          gangliaDummy.rotation.y = time * 0.2 + i * 0.4;
+        } else {
+          gangliaDummy.scale.setScalar(0.0001);
+        }
         gangliaDummy.updateMatrix();
         gangliaRef.current!.setMatrixAt(i, gangliaDummy.matrix);
       });
@@ -2238,8 +2335,7 @@ function BiologicalNervePlexus({ time }: { time: number }) {
         <mesh key={`tie-${idx}`} geometry={geo} material={axonMaterial} />
       ))}
 
-
-      {/* Cranial rootlets anchoring into medulla oblongata */}
+      {/* Cranial rootlets anchoring directly into brainstem medulla oblongata vertices */}
       {rootletGeometries.map((geo, idx) => (
         <mesh key={`rootlet-${idx}`} geometry={geo} material={axonMaterial} />
       ))}
@@ -2272,8 +2368,8 @@ function BiologicalNervePlexus({ time }: { time: number }) {
         </mesh>
       ))}
 
-      {/* Bioluminescent action potential spark stream */}
-      <SynapticSparkParticles time={time} />
+      {/* Bioluminescent action potential spark stream (re-timed to ignite after ~82% tube growth) */}
+      <SynapticSparkParticles time={time} drawProgress={currentDrawProgressRef.current} />
     </group>
   );
 }
@@ -2813,6 +2909,11 @@ const BLOODSTREAM_LOGOS: BloodstreamLogoItem[] = [
   },
 ];
 
+// Lag Point 2d: Preload all 5 bloodstream software logos up front so texture decoding never stalls scroll
+BLOODSTREAM_LOGOS.forEach((item) => {
+  useTexture.preload(item.url);
+});
+
 // Arterial endothelial corridor tube wrapping around the bloodstream gallery
 function ArteryCorridorTunnel({ time }: { time: number }) {
   const tunnelGeo = useMemo(() => {
@@ -2923,7 +3024,8 @@ function ArteryCorridorTunnel({ time }: { time: number }) {
 // ============================================================================
 function BloodstreamErythrocytes({ time }: { time: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const count = 110;
+  const isMobile = typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window);
+  const count = isMobile ? 40 : 110;
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
   // Organic erythrocyte disc geometry: squashed sphere [1, 1, 0.3] mimicking authentic red blood cells
@@ -3429,6 +3531,7 @@ function MonolithTextLine({
 function VisceralBloodDroplets() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const isMobile = typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window);
 
   const droplets = useMemo(() => {
     let seed = 77123;
@@ -3440,7 +3543,8 @@ function VisceralBloodDroplets() {
     const list: Array<{ x: number; y: number; z: number; rx: number; ry: number; rz: number }> = [];
 
     // Droplets clinging below Line 1 ("AFTER EFFECTS", Y ~ +0.75, span X: -4.5 to +4.5)
-    for (let i = 0; i < 24; i++) {
+    const count1 = isMobile ? 10 : 24;
+    for (let i = 0; i < count1; i++) {
       const x = (rnd() - 0.5) * 8.4;
       const y = 0.75 - 0.48 - rnd() * 0.45;
       const z = 0.12 + rnd() * 0.28;
@@ -3449,7 +3553,8 @@ function VisceralBloodDroplets() {
     }
 
     // Heavy visceral droplets and drips below Line 2 ("IS IN MY BLOOD.", Y ~ -0.75)
-    for (let i = 0; i < 32; i++) {
+    const count2 = isMobile ? 14 : 32;
+    for (let i = 0; i < count2; i++) {
       const x = rnd() > 0.35 ? 0.6 + rnd() * 3.8 : (rnd() - 0.5) * 8.6;
       const y = -0.75 - 0.48 - rnd() * 0.65;
       const z = 0.12 + rnd() * 0.32;
@@ -3458,7 +3563,7 @@ function VisceralBloodDroplets() {
     }
 
     return list;
-  }, []);
+  }, [isMobile]);
 
   const dropletGeo = useMemo(() => new THREE.SphereGeometry(1, 10, 10), []);
   const dropletMat = useMemo(
@@ -3836,7 +3941,7 @@ function SceneContent({ scrollRef, onBreachComplete, onProgressTick }: SceneCont
       {/* Phase 3A: Biological Nerve Plexus & Hemisphere Convergence Chiasm */}
       <group ref={spineGroupRef}>
         <HemisphereNeuralConvergence time={timeRef.current} />
-        <BiologicalNervePlexus time={timeRef.current} />
+        <BiologicalNervePlexus time={timeRef.current} scrollRef={scrollRef} />
       </group>
 
       {/* Phase 3B & 3C: The Colossal Beating Heart */}
@@ -4153,7 +4258,7 @@ export function AnatomyIntroScene({
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.15,
         }}
-        dpr={isMobile ? [1, 1.1] : [1, 1.75]}
+        dpr={isMobile ? [1, 1.5] : [1, 1.75]}
       >
         <SceneContent
           scrollRef={scrollProgressRef}

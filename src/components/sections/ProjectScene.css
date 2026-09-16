@@ -28,6 +28,11 @@
   transform-origin: center;
 }
 
+.project-scene__meta > * {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
 .project-scene__meta h3 {
   margin-top: 1rem;
   font-family: var(--font-display);

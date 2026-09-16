@@ -169,7 +169,8 @@ export function initLenis(reducedMotion: boolean) {
   };
 
   gsap.ticker.add(tickerFn);
-  // Lag smoothing (500ms max, 33ms target) absorbs frame drops on 120Hz/ProMotion displays without micro-stutter
+  // Disable lag smoothing to prevent visual jumps during high-performance scrubbing (Rule: AGENTS.md)
+  gsap.ticker.lagSmoothing(0);
   ScrollTrigger.defaults({ scrub: true });
 
   // Delegated anchor link interception for seamless Lenis scrollTo navigation
