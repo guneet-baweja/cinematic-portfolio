@@ -1130,9 +1130,9 @@ export function LuxuryTimepieceDive({ scrollP, scrollRef }: LuxuryTimepieceDiveP
       sapphireRef.current.visible = distToWatch > 0.6;
     }
 
-    // Caliber visibility - permanently active through push-in and macro horology view
+    // Caliber visibility - active during push-in and macro horology view; culled once past watch (camZ <= -108.0)
     if (caliberGroupRef.current) {
-      caliberGroupRef.current.visible = true;
+      caliberGroupRef.current.visible = state.camera.position.z > -108.0;
     }
 
     // Independent continuous horological gear kinetics
@@ -1178,38 +1178,42 @@ export function LuxuryTimepieceDive({ scrollP, scrollRef }: LuxuryTimepieceDiveP
         intensity={2.0}
         color="#fff4e6"
       />
-      <directionalLight
-        position={[3.8, 2.5, 4.0]}
-        intensity={1.6}
-        color="#fde68a"
-      />
-      <ambientLight intensity={0.35} color="#cbd5e1" />
+      <ambientLight intensity={0.4} color="#cbd5e1" />
 
-      {/* Movement Caliber Directional Grazing & Rim Lighting */}
-      {/* 1. Warm Golden Grazing Key - Raking across gear faces at 35° angle */}
-      <directionalLight
-        position={[-2.8, 3.2, 2.0]}
-        intensity={3.2}
-        color="#fef3c7"
-      />
-      {/* 2. Cool Rhodium Specular Rim - Catching crisp micro-bevel highlights on teeth */}
-      <directionalLight
-        position={[3.2, -2.6, 1.5]}
-        intensity={2.8}
-        color="#bae6fd"
-      />
-      {/* 3. Ruby & Hairspring localized accent light (low intensity, zero bloom blowout) */}
+      {/* Additional studio fill lights active on desktop, streamlined on mobile for 120 FPS */}
+      {!isNarrow && (
+        <>
+          <directionalLight
+            position={[3.8, 2.5, 4.0]}
+            intensity={1.6}
+            color="#fde68a"
+          />
+          {/* Movement Caliber Directional Grazing & Rim Lighting */}
+          <directionalLight
+            position={[-2.8, 3.2, 2.0]}
+            intensity={2.8}
+            color="#fef3c7"
+          />
+          <directionalLight
+            position={[3.2, -2.6, 1.5]}
+            intensity={2.2}
+            color="#bae6fd"
+          />
+        </>
+      )}
+
+      {/* Ruby & Hairspring localized accent light (low intensity, zero bloom blowout) */}
       <pointLight
         position={[-0.64, -0.45, -2.3]}
-        intensity={1.6}
+        intensity={1.4}
         color="#fda4af"
         distance={4.0}
         decay={2}
       />
-      {/* 4. Deep Mainplate Shadow Contrast Fill */}
+      {/* Deep Mainplate Shadow Contrast Fill */}
       <pointLight
         position={[0.4, 0.4, -2.4]}
-        intensity={1.2}
+        intensity={1.0}
         color="#fde68a"
         distance={4.5}
         decay={2}

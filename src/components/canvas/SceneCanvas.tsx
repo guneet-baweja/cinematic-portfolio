@@ -345,6 +345,14 @@ function DynamicPostprocessing() {
   );
 }
 
+function PrewarmSceneCanvas() {
+  const { gl, scene, camera } = useThree();
+  useEffect(() => {
+    gl.compile(scene, camera);
+  }, [gl, scene, camera]);
+  return null;
+}
+
 export function SceneCanvas() {
   const { lite, isMobile } = useMotionContext();
   const webglSupported = useMemo(() => isWebGLAvailable(), []);
@@ -383,7 +391,7 @@ export function SceneCanvas() {
     >
       <ErrorBoundary name="SceneCanvas">
         <Canvas
-          frameloop={isGenesis ? "never" : "always"}
+          frameloop={isGenesis ? "demand" : "always"}
           dpr={shouldDowngrade ? [1, 1.1] : [1, 1.75]}
           camera={{ position: [0, 0, 6], fov: 45 }}
           gl={{
@@ -392,6 +400,7 @@ export function SceneCanvas() {
             powerPreference: "high-performance",
           }}
         >
+          <PrewarmSceneCanvas />
           <color attach="background" args={["#050608"]} />
 
           <ContinuousFilmScene isMobile={shouldDowngrade} />

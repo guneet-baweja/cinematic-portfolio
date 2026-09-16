@@ -118,25 +118,23 @@ const CAMERA_KEYS: CameraPoseKey[] = [
   // 15. Bloodstream Gallery - Encounter 4: HOUDINI FX (Z: -61.0)
   { p: 0.77, x: 0.000, y: -16.00, z: -61.00, lookX: 0.000, lookY: -16.00, lookZ: -67.0, fov: 45 },
   // 16. Encounter 5: AFTER EFFECTS CLIMAX BADGE (Z: -67.0) (Monolith text towering ahead in distance at Z: -80)
-  { p: 0.8100, x: 0.000, y: -16.00, z: -67.00, lookX: 0.050, lookY: -16.00, lookZ: -80.0, fov: 45 },
+  { p: 0.8100, x: 0.000, y: -16.00, z: -67.00, lookX: 0.050, lookY: -16.00, lookZ: -73.5, fov: 45 },
   // 17. The Monolith Corridor: Gliding towards "AFTER EFFECTS IS IN MY BLOOD." (Gradual distance approach)
-  { p: 0.8500, x: 0.120, y: -16.00, z: -74.00, lookX: 0.150, lookY: -16.00, lookZ: -80.0, fov: 45 },
-  // 18. The Monolith Corridor: Text looms massive ahead in arterial space
-  { p: 0.8750, x: 0.200, y: -16.00, z: -78.00, lookX: 0.220, lookY: -16.00, lookZ: -80.0, fov: 45 },
-  // 19. The Monolith Fly-Through: Passing between colossal letters (Watch dial resolving in distance at Z: -94)
-  { p: 0.8929, x: 0.265, y: -16.00, z: -81.50, lookX: 0.265, lookY: -16.00, lookZ: -94.0, fov: 45 },
+  { p: 0.8400, x: 0.080, y: -16.00, z: -73.50, lookX: 0.120, lookY: -16.00, lookZ: -80.0, fov: 45 },
+  // 18. The Monolith Fly-Through: Passing between colossal letters (Z: -80.0)
+  { p: 0.8700, x: 0.180, y: -16.00, z: -80.00, lookX: 0.220, lookY: -16.00, lookZ: -86.5, fov: 45 },
+  // 19. Watch Horizon: Exiting Monolith into front-facing watch view
+  { p: 0.9000, x: 0.265, y: -16.00, z: -86.50, lookX: 0.265, lookY: -16.00, lookZ: -94.0, fov: 45 },
   // 20. STAGE 1: Gliding towards Luxury Watch Exterior Dial (Z: -94)
-  { p: 0.9154, x: 0.265, y: -16.00, z: -88.00, lookX: 0.265, lookY: -16.00, lookZ: -94.0, fov: 45 },
-  // 21. STAGE 1: Phasing through Sapphire Glass & entering skeleton aperture (Z: -94 to -95)
-  { p: 0.9389, x: 0.265, y: -16.00, z: -94.80, lookX: 0.265, lookY: -16.00, lookZ: -100.0, fov: 45 },
+  { p: 0.9250, x: 0.265, y: -16.00, z: -92.00, lookX: 0.265, lookY: -16.00, lookZ: -97.5, fov: 45 },
+  // 21. STAGE 1: Phasing through Sapphire Glass & entering skeleton aperture
+  { p: 0.9500, x: 0.265, y: -16.00, z: -97.50, lookX: 0.265, lookY: -16.00, lookZ: -103.5, fov: 45 },
   // 22. STAGE 2: Diving between Interlocking Gears (Z: -97 to -103)
-  { p: 0.9585, x: 0.265, y: -16.00, z: -100.50, lookX: 0.265, lookY: -16.00, lookZ: -106.0, fov: 45 },
-  // 23. STAGE 2: Diving through Tourbillon Aperture (Z: -105.5) - clearing mechanics completely
-  { p: 0.9769, x: 0.265, y: -16.00, z: -105.80, lookX: 0.265, lookY: -16.00, lookZ: -112.5, fov: 45 },
-  // 24. STAGE 4: Grand Climax Typography Sanctuary - "ALWAYS DELIVER ON TIME." (Z: -112.5)
-  { p: 0.9862, x: 0.265, y: -16.00, z: -108.50, lookX: 0.265, lookY: -16.00, lookZ: -112.5, fov: 45 },
-  // 25. STAGE 4: Gliding right up to Typography, flying through letters into Act 01 handoff
-  { p: 1.0000, x: 0.265, y: -16.00, z: -112.50, lookX: 0.265, lookY: -16.00, lookZ: -116.0, fov: 45 },
+  { p: 0.9750, x: 0.265, y: -16.00, z: -103.50, lookX: 0.265, lookY: -16.00, lookZ: -108.5, fov: 45 },
+  // 23. STAGE 2: Diving through Tourbillon Aperture - clearing mechanics completely
+  { p: 0.9900, x: 0.265, y: -16.00, z: -108.50, lookX: 0.265, lookY: -16.00, lookZ: -113.5, fov: 45 },
+  // 24. STAGE 4: Grand Climax Typography Sanctuary - "ALWAYS DELIVER ON TIME." (Z: -113.5)
+  { p: 1.0000, x: 0.265, y: -16.00, z: -113.50, lookX: 0.265, lookY: -16.00, lookZ: -118.0, fov: 45 },
 ];
 
 function evalCameraPose(p: number): CameraPose {
@@ -179,93 +177,6 @@ function evalCameraPose(p: number): CameraPose {
       lookZ: finalLook.z,
       fov,
     };
-  }
-
-  // ============================================================================
-  // UNIFORM 120 FPS ARTERIAL & WATCH CORRIDOR (p in [0.81, 1.00])
-  // Phase 2 Continuous Trajectory:
-  // 1. Monolith Corridor (0.81 -> 0.8929): Pure arterial fly-through
-  // 2. Establishing Shot (0.8929 -> 0.9180): Subtle 3/4 hero perspective angle (X: 0.52, Y: -15.82)
-  // 3. Continuous Push-In (0.9180 -> 0.9420): Single smooth glide into dial face (X -> 0.265, Y -> -16.00)
-  // 4. Scale-Matched Macro Caliber (0.9420 -> 0.9780): Glides through gears with physical parallax
-  // 5. Climax Typography (0.9780 -> 1.0000): Settles into grand typography space
-  // ============================================================================
-  if (clamped >= 0.81) {
-    if (clamped < 0.8929) {
-      // 1. Monolith arterial fly-through
-      const t = (clamped - 0.81) / (0.8929 - 0.81);
-      const z = THREE.MathUtils.lerp(-65.50, -81.50, t);
-      return {
-        x: 0.265,
-        y: -16.00,
-        z,
-        lookX: 0.265,
-        lookY: -16.00,
-        lookZ: THREE.MathUtils.lerp(-80.00, -94.00, t),
-        fov: 45,
-      };
-    } else if (clamped < 0.9180) {
-      // 2. Reference Stage 1: Establishing Shot with subtle ~45° hero perspective
-      const t = (clamped - 0.8929) / (0.9180 - 0.8929);
-      const ease = t * t * (3.0 - 2.0 * t);
-      const z = THREE.MathUtils.lerp(-81.50, -88.00, ease);
-      return {
-        x: THREE.MathUtils.lerp(0.265, 0.520, ease),
-        y: THREE.MathUtils.lerp(-16.00, -15.82, ease),
-        z,
-        lookX: 0.265,
-        lookY: -16.00,
-        lookZ: -94.00,
-        fov: 45,
-      };
-    } else if (clamped < 0.9420) {
-      // 3. Reference Stage 2: Continuous Push-In toward dial center (gliding through opening dial)
-      const t = (clamped - 0.9180) / (0.9420 - 0.9180);
-      const ease = t * t * (3.0 - 2.0 * t);
-      const z = THREE.MathUtils.lerp(-88.00, -93.85, ease);
-      return {
-        x: THREE.MathUtils.lerp(0.520, 0.280, ease),
-        y: THREE.MathUtils.lerp(-15.82, -15.82, ease),
-        z,
-        lookX: THREE.MathUtils.lerp(0.265, 0.050, ease),
-        lookY: THREE.MathUtils.lerp(-16.00, -15.88, ease),
-        lookZ: THREE.MathUtils.lerp(-94.00, -96.50, ease),
-        fov: 45,
-      };
-    } else if (clamped < 0.9780) {
-      // 4. Reference Stage 3 & 4: HERO MACRO CALIBER FRAMING & SILKY PARALLAX DRIFT
-      // Continuous forward glide through Swiss gears from Z: -93.85 to -101.50 (zero standstill or hang!)
-      const t = (clamped - 0.9420) / (0.9780 - 0.9420);
-      const ease = t * t * (3.0 - 2.0 * t);
-      const z = THREE.MathUtils.lerp(-93.85, -101.50, ease);
-      const x = THREE.MathUtils.lerp(0.280, 0.200, ease);
-      const y = THREE.MathUtils.lerp(-15.82, -15.88, ease);
-      const lookX = THREE.MathUtils.lerp(0.050, 0.120, ease);
-      const lookY = THREE.MathUtils.lerp(-15.88, -15.95, ease);
-      return {
-        x,
-        y,
-        z,
-        lookX,
-        lookY,
-        lookZ: THREE.MathUtils.lerp(-96.50, -106.00, ease),
-        fov: 45,
-      };
-    } else {
-      // 5. Reference Stage 5: Exit through Tourbillon into Climax Typography Sanctuary & Act 01 Breach
-      const t = (clamped - 0.9780) / (1.0000 - 0.9780);
-      const ease = t * t * (3.0 - 2.0 * t);
-      const z = THREE.MathUtils.lerp(-101.50, -112.50, ease);
-      return {
-        x: THREE.MathUtils.lerp(0.200, 0.265, ease),
-        y: THREE.MathUtils.lerp(-15.88, -16.00, ease),
-        z,
-        lookX: 0.265,
-        lookY: -16.00,
-        lookZ: THREE.MathUtils.lerp(-106.00, -116.00, ease),
-        fov: 45,
-      };
-    }
   }
 
   if (clamped <= 0) return CAMERA_KEYS[0];
@@ -3598,7 +3509,7 @@ function ColossalBloodstreamMonolith({ time }: { time: number }) {
   const monolithTextures: MonolithBloodTextures = useMemo(() => getMonolithBloodTextures(), []);
 
   return (
-    <group position={[EYE_TARGET.x, -16.00, -80.0]} scale={[subtleScale, subtleScale, 1.0]}>
+    <group position={[0.180, -16.00, -80.0]} scale={[subtleScale, subtleScale, 1.0]}>
       {/* Line 1: Colossal Monolith Upper Line - AFTER EFFECTS */}
       <MonolithTextLine
         text="AFTER EFFECTS"
@@ -3864,9 +3775,10 @@ function SceneContent({ scrollRef, onBreachComplete, onProgressTick }: SceneCont
       bloodstreamGroupRef.current.visible = camZ <= -22.0 && camZ > -92.0;
     }
 
-    // 7. Luxury Timepiece Dive: ONLY active during horology climax (camZ <= -65.0)
+    // 7. Luxury Timepiece Dive: Pre-warmed as soon as camera enters heart cavern (camZ <= -25.0)
+    // 69 units down-corridor behind thick black obsidian fog (100% invisible), but GPU pre-compiles all materials!
     if (watchGroupRef.current) {
-      watchGroupRef.current.visible = camZ <= -65.0;
+      watchGroupRef.current.visible = camZ <= -25.0;
     }
 
     // VOLUMETRIC OBSIDIAN BIO-ATMOSPHERE FOG TRANSITION (Crisp contrast, 0 murky red haze)
@@ -4178,23 +4090,17 @@ export function AnatomyIntroScene({
           scrollProgressRef.current = self.progress;
 
           // Container remains 100% solid & opaque through the watch and typography climax
-          // Only at the very terminal 6000px threshold (p >= 0.998) does it execute a swift clean handoff
+          // Smooth layout-stable fade starting at p >= 0.992 with zero display:none thrashing
           if (containerRef.current) {
-            if (self.progress >= 0.998) {
-              const fade = Math.max(0, 1.0 - (self.progress - 0.998) / 0.002);
+            if (self.progress >= 0.992) {
+              const fade = Math.max(0, 1.0 - (self.progress - 0.992) / 0.008);
               containerRef.current.style.opacity = String(fade);
-              if (fade <= 0.005) {
-                containerRef.current.style.display = "none";
-                containerRef.current.style.visibility = "hidden";
-                containerRef.current.style.pointerEvents = "none";
-              } else {
-                containerRef.current.style.display = "block";
-                containerRef.current.style.visibility = "visible";
-              }
+              containerRef.current.style.visibility = fade <= 0.005 ? "hidden" : "visible";
+              containerRef.current.style.pointerEvents = fade <= 0.005 ? "none" : "auto";
             } else {
-              containerRef.current.style.display = "block";
               containerRef.current.style.opacity = "1";
               containerRef.current.style.visibility = "visible";
+              containerRef.current.style.pointerEvents = "auto";
             }
           }
         },
@@ -4231,8 +4137,7 @@ export function AnatomyIntroScene({
         height: "100vh",
         backgroundColor: "#000000",
         zIndex: 70,
-        pointerEvents: "none",
-        display: isPastIntro ? "none" : "block",
+        pointerEvents: isPastIntro ? "none" : "auto",
         opacity: isPastIntro ? 0 : 1,
         visibility: isPastIntro ? "hidden" : "visible",
       }}
